@@ -1,7 +1,7 @@
 
 #include "LegendreInterp3d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector3d.h"
-#include "GridFunctionNd/UCLAQ_GridFunction3d.h"
+#include "DoubleVectorNd/SCC_DoubleVector3d.h"
+#include "GridFunctionNd/SCC_GridFunction3d.h"
 
 #ifndef _FixedLocationLegendreInterp3d_
 #define _FixedLocationLegendreInterp3d_
@@ -42,7 +42,7 @@ public:
 
 
 	FixedLocationLegendreInterp3d(int interpolationOrder,double xPos, double yPos, double zPos,
-    const UCLAQ::GridFunction3d& F)
+    const SCC::GridFunction3d& F)
     {
 	LegendreInterp3d interp3d(interpolationOrder);
     interp3d.captureNodesAndWeights(xPos,yPos,zPos,F,
@@ -61,7 +61,7 @@ public:
     }
 
 	void initialize(int interpolationOrder,double xPos, double yPos, double zPos,
-    const UCLAQ::GridFunction3d& F)
+    const SCC::GridFunction3d& F)
     {
 	LegendreInterp3d interp3d(interpolationOrder);
     interp3d.captureNodesAndWeights(xPos,yPos,zPos,F,
@@ -71,7 +71,7 @@ public:
 			interpWeights);
     }
 
-	double getInterpolatedValue(const UCLAQ::GridFunction3d& F)
+	double getInterpolatedValue(const SCC::GridFunction3d& F)
 	{
     long i; long j; long k;
     long fxIndex; long fyIndex; long fzIndex;
@@ -93,7 +93,7 @@ public:
 	long yMinIndex; long yMaxIndex;
 	long zMinIndex; long zMaxIndex;
 
-	UCLAQ::DoubleVector3d interpWeights;
+	SCC::DoubleVector3d interpWeights;
 
 };
 #endif

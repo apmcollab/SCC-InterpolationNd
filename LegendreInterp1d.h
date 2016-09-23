@@ -1,11 +1,11 @@
 #ifndef _LegendreInterp1d_
 #define _LegendreInterp1d_
 
-#include "GridFunctionNd/UCLAQ_GridFunction1d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector1d.h"
+#include "GridFunctionNd/SCC_GridFunction1d.h"
+#include "DoubleVectorNd/SCC_DoubleVector1d.h"
 #include "LegendrePoly.h"
 
-#include "DoubleVectorNd/UCLAQ_DoubleVector2d.h"
+#include "DoubleVectorNd/SCC_DoubleVector2d.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -78,7 +78,7 @@ void initialize(int interpolationOrder)
 }
 
 
-double evaluateInterpolant(double xPos, const UCLAQ::GridFunction1d& f)
+double evaluateInterpolant(double xPos, const SCC::GridFunction1d& f)
 {
 	createNodesAndWeightsData(xPos,f);
 
@@ -94,7 +94,7 @@ double evaluateInterpolant(double xPos, const UCLAQ::GridFunction1d& f)
 }
 
 
-void createNodesAndWeightsData(double xPos, const UCLAQ::GridFunction1d& f)
+void createNodesAndWeightsData(double xPos, const SCC::GridFunction1d& f)
 {
 	// Determine the range of grid indices associated with the interpolant, a range
 	// determined so that the interpolated value is centered as much as possible
@@ -109,7 +109,7 @@ void createNodesAndWeightsData(double xPos, const UCLAQ::GridFunction1d& f)
     {
     errMessage.assign("\nXXX LegendreInterp1d XXX\n");
     errMessage += "In evaluateInterpolant(...) \n";
-	errMessage += "UCLAQ::GridFunction1d argument of insufficient size for\n";
+	errMessage += "SCC::GridFunction1d argument of insufficient size for\n";
     errMessage += "requested interpolation.  \n";
     throw runtime_error(errMessage);
     }
@@ -184,9 +184,9 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 }
 
 void captureNodesAndWeights
-      (double xPos, const UCLAQ::GridFunction1d& F,
+      (double xPos, const SCC::GridFunction1d& F,
       long&  xMinIndex, long& xMaxIndex,
-      UCLAQ::DoubleVector1d& interpWeights)
+      SCC::DoubleVector1d& interpWeights)
 {
 	  createNodesAndWeightsData(xPos, F);
 
@@ -228,7 +228,7 @@ void createInterpolationMatrixInvTranspose()
 
     long interpSystemSize = (legendreInd_X + 1);
 
-    UCLAQ::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
+    SCC::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
 
     long interpMatrixIndex;
     long prodIndex;
@@ -272,7 +272,7 @@ void createInterpolationMatrixInvTranspose()
 
     int   legendreInd_X;
 
-	UCLAQ::DoubleVector2d interpMatrixInvTranspose;
+	SCC::DoubleVector2d interpMatrixInvTranspose;
     vector<double>        evaluationVector;
     vector<double>        weightVector;
 

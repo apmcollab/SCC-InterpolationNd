@@ -1,11 +1,11 @@
 #ifndef _LegendreInterp2d_
 #define _LegendreInterp2d_
 
-#include "GridFunctionNd/UCLAQ_GridFunction2d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector2d.h"
+#include "GridFunctionNd/SCC_GridFunction2d.h"
+#include "DoubleVectorNd/SCC_DoubleVector2d.h"
 #include "ProductLegendrePoly2d.h"
 
-#include "DoubleVectorNd/UCLAQ_DoubleVector2d.h"
+#include "DoubleVectorNd/SCC_DoubleVector2d.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -82,7 +82,7 @@ void initialize(int interpolationOrder)
 }
 
 
-double evaluateInterpolant(double xPos, double yPos,const UCLAQ::GridFunction2d& f)
+double evaluateInterpolant(double xPos, double yPos,const SCC::GridFunction2d& f)
 {
 	createNodesAndWeightsData(xPos,yPos,f);
 
@@ -100,7 +100,7 @@ double evaluateInterpolant(double xPos, double yPos,const UCLAQ::GridFunction2d&
 }
 
 
-void createNodesAndWeightsData(double xPos, double yPos, const UCLAQ::GridFunction2d& f)
+void createNodesAndWeightsData(double xPos, double yPos, const SCC::GridFunction2d& f)
 {
 	// Determine the range of grid indices associated with the interpolant, a range
 	// determined so that the interpolated value is centered as much as possible
@@ -119,7 +119,7 @@ void createNodesAndWeightsData(double xPos, double yPos, const UCLAQ::GridFuncti
     {
     errMessage.assign("\nXXX LegendreInterp2d XXX\n");
     errMessage += "In evaluateInterpolant(...) \n";
-	errMessage += "UCLAQ::GridFunction2d argument of insufficient size for\n";
+	errMessage += "SCC::GridFunction2d argument of insufficient size for\n";
     errMessage += "requested interpolation.  \n";
     throw runtime_error(errMessage);
     }
@@ -205,10 +205,10 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 }
 
 void captureNodesAndWeights
-      (double xPos, double yPos,  const UCLAQ::GridFunction2d& F,
+      (double xPos, double yPos,  const SCC::GridFunction2d& F,
       long&  xMinIndex, long& xMaxIndex,
 	  long&  yMinIndex, long& yMaxIndex,
-      UCLAQ::DoubleVector2d& interpWeights)
+      SCC::DoubleVector2d& interpWeights)
 {
 	  createNodesAndWeightsData(xPos, yPos, F);
 
@@ -258,7 +258,7 @@ void createInterpolationMatrixInvTranspose()
 
     long interpSystemSize = (legendreInd_X + 1)*(legendreInd_Y + 1);
 
-    UCLAQ::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
+    SCC::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
 
     long interpMatrixIndex;
     long prodIndex;
@@ -309,7 +309,7 @@ void createInterpolationMatrixInvTranspose()
     int   legendreInd_X;
     int   legendreInd_Y;
 
-	UCLAQ::DoubleVector2d interpMatrixInvTranspose;
+	SCC::DoubleVector2d interpMatrixInvTranspose;
     vector<double>        evaluationVector;
     vector<double>        weightVector;
 

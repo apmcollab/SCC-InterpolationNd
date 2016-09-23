@@ -1,7 +1,7 @@
 
 #include "LegendreInterp1d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector1d.h"
-#include "GridFunctionNd/UCLAQ_GridFunction1d.h"
+#include "DoubleVectorNd/SCC_DoubleVector1d.h"
+#include "GridFunctionNd/SCC_GridFunction1d.h"
 
 #ifndef _FixedLocationLegendreInterp1d_
 #define _FixedLocationLegendreInterp1d_
@@ -39,14 +39,14 @@ public:
 	xMinIndex=0; xMaxIndex=0;
     }
 
-	FixedLocationLegendreInterp1d(int interpolationOrder, double xPos, const UCLAQ::GridFunction1d& F)
+	FixedLocationLegendreInterp1d(int interpolationOrder, double xPos, const SCC::GridFunction1d& F)
     {
 	LegendreInterp1d interp1d(interpolationOrder);
     interp1d.captureNodesAndWeights(xPos,F,xMinIndex,xMaxIndex,interpWeights);
     }
 
 
-	void initialize(int interpolationOrder, double xPos, const UCLAQ::GridFunction1d& F)
+	void initialize(int interpolationOrder, double xPos, const SCC::GridFunction1d& F)
     {
 	LegendreInterp1d interp1d(interpolationOrder);
     interp1d.captureNodesAndWeights(xPos,F, xMinIndex,xMaxIndex,interpWeights);
@@ -59,7 +59,7 @@ public:
 	interpWeights.initialize(P.interpWeights);
     }
 
-	double getInterpolatedValue(const UCLAQ::GridFunction1d& F)
+	double getInterpolatedValue(const SCC::GridFunction1d& F)
 	{
     long i;
     long fxIndex;
@@ -75,6 +75,6 @@ public:
 
 	long xMinIndex; long xMaxIndex;
 
-	UCLAQ::DoubleVector1d interpWeights;
+	SCC::DoubleVector1d interpWeights;
 };
 #endif

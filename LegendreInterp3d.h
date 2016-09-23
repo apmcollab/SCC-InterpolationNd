@@ -1,11 +1,11 @@
 #ifndef _LegendreInterp3d_
 #define _LegendreInterp3d_
 
-#include "GridFunctionNd/UCLAQ_GridFunction3d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector3d.h"
+#include "GridFunctionNd/SCC_GridFunction3d.h"
+#include "DoubleVectorNd/SCC_DoubleVector3d.h"
 #include "ProductLegendrePoly3d.h"
 
-#include "DoubleVectorNd/UCLAQ_DoubleVector2d.h"
+#include "DoubleVectorNd/SCC_DoubleVector2d.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -84,7 +84,7 @@ void initialize(int interpolationOrder)
     createInterpolationMatrixInvTranspose();
 }
 
-double evaluateInterpolant(double xPos, double yPos, double zPos, const UCLAQ::GridFunction3d& f)
+double evaluateInterpolant(double xPos, double yPos, double zPos, const SCC::GridFunction3d& f)
 {
 	createNodesAndWeightsData(xPos,yPos,zPos,f);
 
@@ -104,7 +104,7 @@ double evaluateInterpolant(double xPos, double yPos, double zPos, const UCLAQ::G
 }
 
 
-void createNodesAndWeightsData(double xPos, double yPos, double zPos, const UCLAQ::GridFunction3d& f)
+void createNodesAndWeightsData(double xPos, double yPos, double zPos, const SCC::GridFunction3d& f)
 {
 	// Determine the range of grid indices associated with the interpolant, a range
 	// determined so that the interpolated value is centered as much as possible
@@ -126,7 +126,7 @@ void createNodesAndWeightsData(double xPos, double yPos, double zPos, const UCLA
     {
     errMessage.assign("\nXXX LegendreInterp3d XXX\n");
     errMessage += "In evaluateInterpolant(...) \n";
-	errMessage += "UCLAQ::GridFunction3d argument of insufficient size for\n";
+	errMessage += "SCC::GridFunction3d argument of insufficient size for\n";
     errMessage += "requested interpolation.  \n";
     throw runtime_error(errMessage);
     }
@@ -223,11 +223,11 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 }
 
 void captureNodesAndWeights
-      (double xPos, double yPos, double zPos, const UCLAQ::GridFunction3d& F,
+      (double xPos, double yPos, double zPos, const SCC::GridFunction3d& F,
       long&  xMinIndex, long& xMaxIndex,
 	  long&  yMinIndex, long& yMaxIndex,
       long&  zMinIndex, long& zMaxIndex,
-      UCLAQ::DoubleVector3d& interpWeights)
+      SCC::DoubleVector3d& interpWeights)
 {
 	  createNodesAndWeightsData(xPos, yPos, zPos, F);
 
@@ -283,7 +283,7 @@ void createInterpolationMatrixInvTranspose()
 
     long interpSystemSize = (legendreInd_X + 1)*(legendreInd_Y + 1)*(legendreInd_Z + 1);
 
-    UCLAQ::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
+    SCC::DoubleVector2d interpMatrix(interpSystemSize,interpSystemSize);
 
     long interpMatrixIndex;
     long prodIndex;
@@ -340,7 +340,7 @@ void createInterpolationMatrixInvTranspose()
     int   legendreInd_Y;
     int   legendreInd_Z;
 
-	UCLAQ::DoubleVector2d interpMatrixInvTranspose;
+	SCC::DoubleVector2d interpMatrixInvTranspose;
     vector<double>        evaluationVector;
     vector<double>        weightVector;
 

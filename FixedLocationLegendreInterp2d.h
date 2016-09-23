@@ -1,7 +1,7 @@
 
 #include "LegendreInterp2d.h"
-#include "DoubleVectorNd/UCLAQ_DoubleVector2d.h"
-#include "GridFunctionNd/UCLAQ_GridFunction2d.h"
+#include "DoubleVectorNd/SCC_DoubleVector2d.h"
+#include "GridFunctionNd/SCC_GridFunction2d.h"
 
 #ifndef _FixedLocationLegendreInterp2d_
 #define _FixedLocationLegendreInterp2d_
@@ -40,7 +40,7 @@ public:
     }
 
 	FixedLocationLegendreInterp2d( int interpolationOrder, double xPos, double yPos,
-    const UCLAQ::GridFunction2d& F)
+    const SCC::GridFunction2d& F)
     {
 	LegendreInterp2d interp2d(interpolationOrder);
     interp2d.captureNodesAndWeights(xPos,yPos,F, xMinIndex,xMaxIndex, yMinIndex,yMaxIndex, interpWeights);
@@ -55,14 +55,14 @@ public:
     }
 
 	void initialize(int interpolationOrder, double xPos, double yPos,
-    const UCLAQ::GridFunction2d& F)
+    const SCC::GridFunction2d& F)
     {
 	LegendreInterp2d interp2d(interpolationOrder);
     interp2d.captureNodesAndWeights(xPos,yPos,F, xMinIndex,xMaxIndex, yMinIndex,yMaxIndex, interpWeights);
     }
 
 
-	double getInterpolatedValue(const UCLAQ::GridFunction2d& F)
+	double getInterpolatedValue(const SCC::GridFunction2d& F)
 	{
     long i; long j;
     long fxIndex; long fyIndex;
@@ -81,6 +81,6 @@ public:
 	long xMinIndex; long xMaxIndex;
 	long yMinIndex; long yMaxIndex;
 
-	UCLAQ::DoubleVector2d interpWeights;
+	SCC::DoubleVector2d interpWeights;
 };
 #endif

@@ -99,6 +99,8 @@ class FourierInterpolation2d
     //
     void interpolate(SCC::GridFunction2d& valA, SCC::GridFunction2d& valB,bool sigmaFactorFlag = false)
     {
+
+
     	if((this->nxA != valA.getXpanelCount())||
     	   (this->nxB != valB.getXpanelCount())||
 		   (this->nyA != valA.getYpanelCount())||
@@ -106,6 +108,31 @@ class FourierInterpolation2d
     	{
     	initialize(valA.getXpanelCount(),valA.getYpanelCount(),valB.getXpanelCount(),valB.getYpanelCount());
     	}
+
+
+    	/* Code to check DoubleVector2D version */
+        /*
+    	SCC::DoubleVector2d vA(nxA,nyA);
+    	SCC::DoubleVector2d vB(nxB,nyB);
+    	for(long i = 0; i < nxA; i++)
+    	{
+    	for(long j = 0; j < nyA; j++)
+    	{
+    		vA(i,j) = valA(i,j);
+    	}}
+
+    	interpolate(vA,vB, sigmaFactorFlag);
+
+    	for(long i = 0; i < nxB; i++)
+    	{
+    	for(long j = 0; j < nyB; j++)
+    	{
+    		valB(i,j) = vB(i,j);
+    	}}
+    	valB.enforcePeriodicity();
+
+    	return;
+    	*/
 
      	imag_Ag.initialize(valA.getXpanelCount(),valA.getXmin(),valA.getXmax(),valA.getYpanelCount(),valA.getYmin(),valA.getYmax());
         imag_Ag.setToValue(0.0);
@@ -142,9 +169,6 @@ class FourierInterpolation2d
         		realtrans_B(kBX_Index,kBY_Index) = realtrans_A(kAX_Index,kAY_Index);
         		imagtrans_B(kBX_Index,kBY_Index) = imagtrans_A(kAX_Index,kAY_Index);
         }}
-
-
-
 
         // [kY_Index + kX_Index*nyB]
         //
@@ -195,8 +219,6 @@ class FourierInterpolation2d
     			}
     		}}
     	}
-
-
 
     	DFT_B.fftw2d_inverse(realtrans_B,imagtrans_B, valB, imag_Bg);
     }

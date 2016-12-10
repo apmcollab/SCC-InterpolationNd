@@ -109,8 +109,8 @@ void createNodesAndWeightsData(double xPos, double yPos, const SCC::GridFunction
 	double hx = f.getHx();
     double hy = f.getHy();
 
-    double xPanel = f.getXpanelCount();
-    double yPanel = f.getYpanelCount();
+    long xPanel = f.getXpanelCount();
+    long yPanel = f.getYpanelCount();
 
     string errMessage;
 

@@ -101,7 +101,7 @@ void createNodesAndWeightsData(double xPos, const SCC::GridFunction1d& f)
 	// with respect to the interpolation values.
 
 	double hx     = f.getHx();
-    double xPanel = f.getXpanelCount();
+    long   xPanel = f.getXpanelCount();
 
     string errMessage;
 

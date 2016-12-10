@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <vector>
 #include <stdexcept>
+#include <array>
 using namespace std;
 
 /*
@@ -104,6 +105,99 @@ double evaluateInterpolant(double xPos, double yPos, double zPos, const SCC::Gri
 }
 
 
+void createNodesAndWeightsData(double xPos, double yPos, double zPos, array<long,3>& coordPanels,
+array<double,3>& coordMin, array<double, 3>& coordMax)
+{
+	// Determine the range of grid indices associated with the interpolant, a range
+	// determined so that the interpolated value is centered as much as possible
+	// with respect to the interpolation values.
+
+
+    long xPanel = coordPanels[0];
+    long yPanel = coordPanels[1];
+    long zPanel = coordPanels[2];
+
+   	double hx = (coordMax[0] - coordMin[0])/xPanel;
+    double hy = (coordMax[1] - coordMin[1])/yPanel;
+    double hz = (coordMax[2] - coordMin[2])/zPanel;
+
+    string errMessage;
+
+    if((legendreInd_X > xPanel)
+     ||(legendreInd_Y > yPanel)
+     ||(legendreInd_Z > zPanel))
+    {
+    errMessage.assign("\nXXX LegendreInterp3d XXX\n");
+    errMessage += "In evaluateInterpolant(...) \n";
+	errMessage += "SCC::GridFunction3d argument of insufficient size for\n";
+    errMessage += "requested interpolation.  \n";
+    throw runtime_error(errMessage);
+    }
+
+    double xMin   = coordMin[0];
+    double yMin   = coordMin[1];
+    double zMin   = coordMin[2];
+
+    long    xInterpIndex = round((xPos-xMin)/hx);
+    long    yInterpIndex = round((yPos-yMin)/hy);
+    long    zInterpIndex = round((zPos-zMin)/hz);
+
+    if(xInterpIndex < 0)      xInterpIndex = 0;
+    if(yInterpIndex < 0)      yInterpIndex = 0;
+    if(zInterpIndex < 0)      zInterpIndex = 0;
+    if(xInterpIndex > xPanel) xInterpIndex = xPanel;
+    if(yInterpIndex > yPanel) yInterpIndex = yPanel;
+    if(zInterpIndex > zPanel) zInterpIndex = zPanel;
+
+    getIndexBounds(xInterpIndex,legendreInd_X,hx,xPanel,xMin,xPos, xMinIndex, xMaxIndex);
+    getIndexBounds(yInterpIndex,legendreInd_Y,hy,yPanel,yMin,yPos, yMinIndex, yMaxIndex);
+    getIndexBounds(zInterpIndex,legendreInd_Z,hz,zPanel,zMin,zPos, zMinIndex, zMaxIndex);
+
+    ProductLegendrePoly3d productLegendre(-1.0,1.0,-1.0,1.0,-1.0,1.0);
+    long interpSystemSize = (legendreInd_X + 1)*(legendreInd_Y + 1)*(legendreInd_Z + 1);
+
+    evaluationVector.resize(interpSystemSize);
+    weightVector.resize(interpSystemSize);
+
+    double xEvalPos = xPos - (xMinIndex*hx + xMin);
+    double yEvalPos = yPos - (yMinIndex*hy + yMin);
+    double zEvalPos = zPos - (zMinIndex*hz + zMin);
+
+    // Scale evaluation point to [-1.0, 1.0]
+
+    if(legendreInd_X == 0) {xEvalPos /= hx;}
+    else           {xEvalPos = -1.0 + (2.0*xEvalPos)/(legendreInd_X*hx);}
+
+    if(legendreInd_Y == 0) {yEvalPos /= hy;}
+    else           {yEvalPos = -1.0 + (2.0*yEvalPos)/(legendreInd_Y*hy);}
+
+    if(legendreInd_Z == 0) {zEvalPos /= hz;}
+    else           {zEvalPos = -1.0 + (2.0*zEvalPos)/(legendreInd_Z*hz);}
+
+    long prodIndex = 0;
+    int pxInd; int pyInd; int pzInd;
+
+    for(pxInd = 0; pxInd <= legendreInd_X; pxInd++)
+    {
+    for(pyInd = 0; pyInd <= legendreInd_Y; pyInd++)
+    {
+    for(pzInd = 0; pzInd <= legendreInd_Z; pzInd++)
+    {
+    	evaluationVector[prodIndex] = productLegendre.evaluate(xEvalPos,pxInd,yEvalPos,pyInd,zEvalPos,pzInd);
+    	prodIndex++;
+    }}}
+
+    // Create weight vector
+
+    for(long i = 0; i < interpSystemSize; i++)
+    {
+    weightVector[i] = 0.0;
+    for(long j = 0; j < interpSystemSize; j++)
+    {
+    weightVector[i] += interpMatrixInvTranspose(i,j)*evaluationVector[j];
+    }}
+}
+
 void createNodesAndWeightsData(double xPos, double yPos, double zPos, const SCC::GridFunction3d& f)
 {
 	// Determine the range of grid indices associated with the interpolant, a range
@@ -114,9 +208,9 @@ void createNodesAndWeightsData(double xPos, double yPos, double zPos, const SCC:
     double hy = f.getHy();
     double hz = f.getHz();
 
-    double xPanel = f.getXpanelCount();
-    double yPanel = f.getYpanelCount();
-    double zPanel = f.getZpanelCount();
+    long xPanel = f.getXpanelCount();
+    long yPanel = f.getYpanelCount();
+    long zPanel = f.getZpanelCount();
 
     string errMessage;
 
@@ -221,6 +315,39 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 
 	}
 }
+
+void captureNodesAndWeights (double xPos, double yPos, double zPos,
+      array<long,3>& coordPanels, array<double,3>& coordMin, array<double, 3>& coordMax,
+      array<long,3>& minIndex, array<long, 3>& maxIndex,  vector<double>& weightVector)
+{
+	  createNodesAndWeightsData(xPos, yPos, zPos, coordPanels,coordMin,coordMax);
+
+	  minIndex[0]  = this->xMinIndex;
+	  maxIndex[0]  = this->xMaxIndex;
+	  minIndex[1]  = this->yMinIndex;
+	  maxIndex[1]  = this->yMaxIndex;
+	  minIndex[2]  = this->zMinIndex;
+	  maxIndex[2]  = this->zMaxIndex;
+
+	  weightVector = this->weightVector;
+
+	  /*
+	  // Pack the weights into a 3d array
+	  interpWeights.initialize(legendreInd_X+1,legendreInd_Y+1,legendreInd_Z+1);
+
+	  long weightIndex = 0;
+      for(long i = 0; i <= legendreInd_X; i++)
+      {
+      for(long j = 0; j <= legendreInd_Y; j++)
+	  {
+	  for(long k = 0; k <= legendreInd_Z; k++)
+	  {
+	    interpWeights(i,j,k) = weightVector[weightIndex];
+	    weightIndex++;
+	  }}}
+	  */
+}
+
 
 void captureNodesAndWeights
       (double xPos, double yPos, double zPos, const SCC::GridFunction3d& F,

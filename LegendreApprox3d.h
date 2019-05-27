@@ -177,9 +177,21 @@ double evaluate(double x, double xMin, double xMax,
 
     if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0)){return F[0];}
 
+    // Replace matrix class product with inline invocation of dgemv
+
+    // coeff = Ainv*F;
+
     // Create coefficients of the approximation
 
-    coeff = Ainv*F;
+    long rows      = (degreeX+1)*(degreeY+1)*(degreeZ+1);
+    long cols      = rows;
+    char TRANS     = 'N';
+    double ALPHA   = 1.0;
+    double BETA    = 0.0;
+    long INCX      = 1;
+    long INCY      = 1;
+
+    dgemv_(&TRANS,&rows,&cols,&ALPHA,Ainv.getDataPointer(),&rows,&F[0],&INCX,&BETA,&coeff[0],&INCY);
 
 	// Evaluate interpolant at relative locations in
 	// region [0, degreeX]x[0,degreeY]
@@ -226,9 +238,22 @@ void evaluateDerivative(double x, double xMin, double xMax,
     if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0))
     {dFvalues[0]= 0.0; dFvalues[1] = 0.0; dFvalues[2] = 0.0; return;}
 
+    // Replace matrix class product with inline invocation of dgemv
+
+    // coeff = Ainv*F;
+
     // Create coefficients of the approximation
 
-    coeff = Ainv*F;
+    long rows      = (degreeX+1)*(degreeY+1)*(degreeZ+1);
+    long cols      = rows;
+    char TRANS     = 'N';
+    double ALPHA   = 1.0;
+    double BETA    = 0.0;
+    long INCX      = 1;
+    long INCY      = 1;
+
+    dgemv_(&TRANS,&rows,&cols,&ALPHA,Ainv.getDataPointer(),&rows,&F[0],&INCX,&BETA,&coeff[0],&INCY);
+
 
     double xI; double yJ; double zK;
 

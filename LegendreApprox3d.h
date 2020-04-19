@@ -443,7 +443,7 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
 	int degreeZ;
 
 
-    SCC::LapackMatrix     Ainv;
+    SCC::LapackMatrix    Ainv;
     vector<double>       coeff;
 
 	vector<double>      legendreValues_X;

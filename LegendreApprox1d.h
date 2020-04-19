@@ -31,7 +31,7 @@
 #include "LegendrePolyEvaluator.h"
 
 #include <vector>
-using namespace std;
+
 
 
 #ifndef _LegendreApprox1d_
@@ -130,7 +130,7 @@ void initialize(int degreeX)
 }
 
 double evaluate(double x, double xMin, double xMax,
-                vector<double>& F)
+                std::vector<double>& F)
 {
     assert((int)F.size() == (degreeX+1));
 
@@ -161,7 +161,7 @@ double evaluate(double x, double xMin, double xMax,
 }
 
 double evaluateDerivative(double x, double xMin, double xMax,
-                        vector<double>& F)
+                        std::vector<double>& F)
 {
     assert((int)F.size() == (degreeX+1));
 
@@ -194,7 +194,7 @@ double evaluateDerivative(double x, double xMin, double xMax,
 
 
 void evaluate(double x, double xMin, double xMax,
-              vector<double>& F, double& Fval, double& dFval)
+              std::vector<double>& F, double& Fval, double& dFval)
 {
     assert((int)F.size() == (degreeX+1));
 
@@ -253,15 +253,15 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     long LDA   = N;
     long LDAF  = N;
 
-    vector <long >   IPIV(N);
+    std::vector <long >   IPIV(N);
     long* IPIVptr = &IPIV[0];
 
     char  EQED;
 
-    vector<double>   R(N);
+    std::vector<double>   R(N);
     double* Rptr  = &R[0];
 
-    vector<double>    C(N);
+    std::vector<double>    C(N);
     double* Cptr  =  &C[0];
 
     long NRHS     = N;
@@ -277,14 +277,14 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     long LDX     = N;
 
     double         RCOND;
-    vector<double>  FERR(NRHS);
-    vector<double>  BERR(NRHS);
+    std::vector<double>  FERR(NRHS);
+    std::vector<double>  BERR(NRHS);
 
 
-    vector<double>   WORK(4*N);
+    std::vector<double>   WORK(4*N);
     double* WORKptr = &WORK[0];
 
-    vector<long>       IWORK(N);
+    std::vector<long>       IWORK(N);
     long* IWORKptr  = &IWORK[0];
 
     long   INFO = 0;
@@ -297,20 +297,20 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
 
     if(INFO != 0)
     {
-        cerr << "dgesvx  Failed : INFO = " << INFO  << endl;
+        std::cerr << "dgesvx  Failed : INFO = " << INFO  << std::endl;
         exit((int)1);
     }
 
-        //cout << "RCOND " << RCOND << endl;
+        //cout << "RCOND " << RCOND << std::endl;
 	}
 
 	int degreeX;
 
     SCC::LapackMatrix     Ainv;
-    vector<double>       coeff;
+    std::vector<double>       coeff;
 
-	vector<double>      legendreValues_X;
-	vector<double>     legendreDvalues_X;
+	std::vector<double>      legendreValues_X;
+	std::vector<double>     legendreDvalues_X;
 
     LegendrePolyEvaluator legendreEval_X;
 };

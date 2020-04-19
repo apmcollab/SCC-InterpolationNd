@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-using namespace std;
+
 
 #include "DoubleVectorNd/SCC_DoubleVector1d.h"
 #include "GridFunctionNd/SCC_GridFunction1d.h"
@@ -124,7 +124,7 @@ class FourierInterpolation1d
     			if(k1 != 0)
     			{
     			kB_Index = k1 + (nxB/2);
-    			sigma = sin(fabs(k1*pi2N))/abs(k1*pi2N);
+    			sigma = std::sin(std::fabs(k1*pi2N))/std::abs(k1*pi2N);
     	        realtrans_B(kB_Index) *= sigma;
     	        imagtrans_B(kB_Index) *= sigma;
     			}
@@ -201,7 +201,7 @@ class FourierInterpolation1d
     			if(k1 != 0)
     			{
     			kB_Index = k1 + (nxB/2);
-    			sigma = sin(fabs(k1*pi2N))/abs(k1*pi2N);
+    			sigma = std::sin(std::fabs(k1*pi2N))/std::abs(k1*pi2N);
     	        realtrans_B(kB_Index) *= sigma;
     	        imagtrans_B(kB_Index) *= sigma;
     			}

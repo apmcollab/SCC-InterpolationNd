@@ -7,7 +7,6 @@
 #include <vector>
 #include <functional>
 #include <cmath>
-using namespace std;
 
 #ifndef _LegendrePolyEvaluator_
 #define _LegendrePolyEvaluator_
@@ -98,7 +97,7 @@ class LegendrePolyEvaluator
 		this->maxIndex = maxIndex;
 	}
 
-	void evaluate(double s,vector<double>& values)
+	void evaluate(double s,std::vector<double>& values)
 	{
     double x = (2*s - (a+b))/(b-a);
     double normFactor;
@@ -125,7 +124,7 @@ class LegendrePolyEvaluator
     }
 	}
 
-	void evaluateDerivatives(double s,vector<double>& derivativeValues)
+	void evaluateDerivatives(double s,std::vector<double>& derivativeValues)
 	{
 	//
 	// Transform to unit interval
@@ -169,7 +168,7 @@ class LegendrePolyEvaluator
 	double              a;
 	double              b;
 	int          maxIndex;
-	vector<double> values;
+	std::vector<double> values;
 };
 
 

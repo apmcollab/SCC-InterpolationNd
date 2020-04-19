@@ -9,7 +9,7 @@
 #include <vector>
 #include <functional>
 #include <cmath>
-using namespace std;
+
 
 
 #include "LegendreApprox2d.h"
@@ -158,14 +158,14 @@ double evaluate(double x,double y)
    return legendreApprox2d.evaluate(x,interpXmin,interpXmax,y,interpYmin,interpYmax,Fvalues);
 }
 
-void evaluateDerivative(double x,double y, vector<double>& dFvalues)
+void evaluateDerivative(double x,double y, std::vector<double>& dFvalues)
 {
    setLocalData(x,y);
    return legendreApprox2d.evaluateDerivative(x,interpXmin,interpXmax,y,interpYmin,interpYmax,
                                              Fvalues,dFvalues);
 }
 
-void evaluate(double x, double y, double& Fval, vector<double>& dFvalues)
+void evaluate(double x, double y, double& Fval, std::vector<double>& dFvalues)
 {
 	setLocalData(x,y);
     legendreApprox2d.evaluate(x,interpXmin,interpXmax,y,interpYmin,interpYmax,
@@ -277,7 +277,7 @@ void setLocalData(double x,double y)
 
 	LegendreApprox2d legendreApprox2d;
 
-	vector<double>   Fvalues;
+	std::vector<double>   Fvalues;
 
 	double           interpXmin;
 	double           interpXmax;

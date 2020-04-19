@@ -12,7 +12,7 @@
 #include <vector>
 #include <stdexcept>
 #include <array>
-using namespace std;
+
 
 /*
 #############################################################################
@@ -131,7 +131,7 @@ array<double,3>& coordMin, array<double, 3>& coordMax)
     errMessage += "In evaluateInterpolant(...) \n";
 	errMessage += "SCC::GridFunction3d argument of insufficient size for\n";
     errMessage += "requested interpolation.  \n";
-    throw runtime_error(errMessage);
+    throw std::runtime_error(errMessage);
     }
 
     double xMin   = coordMin[0];
@@ -187,7 +187,7 @@ array<double,3>& coordMin, array<double, 3>& coordMax)
     	prodIndex++;
     }}}
 
-    // Create weight vector
+    // Create weight std::vector
 
     for(long i = 0; i < interpSystemSize; i++)
     {
@@ -278,7 +278,7 @@ void createNodesAndWeightsData(double xPos, double yPos, double zPos, const SCC:
     	prodIndex++;
     }}}
 
-    // Create weight vector
+    // Create weight std::vector
 
     for(long i = 0; i < interpSystemSize; i++)
     {
@@ -318,7 +318,7 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 
 void captureNodesAndWeights (double xPos, double yPos, double zPos,
       array<long,3>& coordPanels, array<double,3>& coordMin, array<double, 3>& coordMax,
-      array<long,3>& minIndex, array<long, 3>& maxIndex,  vector<double>& weightVector)
+      array<long,3>& minIndex, array<long, 3>& maxIndex,  std::vector<double>& weightVector)
 {
 	  createNodesAndWeightsData(xPos, yPos, zPos, coordPanels,coordMin,coordMax);
 
@@ -468,8 +468,8 @@ void createInterpolationMatrixInvTranspose()
     int   legendreInd_Z;
 
 	SCC::DoubleVector2d interpMatrixInvTranspose;
-    vector<double>        evaluationVector;
-    vector<double>        weightVector;
+    std::vector<double>        evaluationVector;
+    std::vector<double>        weightVector;
 
     long xMinIndex; long xMaxIndex;
     long yMinIndex; long yMaxIndex;

@@ -1,6 +1,6 @@
 
 #include <cmath>
-using namespace std;
+
 
 #include "DoubleVectorNd/SCC_DoubleVector2d.h"
 #include "GridFunctionNd/SCC_GridFunction2d.h"
@@ -213,7 +213,7 @@ class FourierInterpolation2d
     			{
     			kX_Index = k1 + (nxB/2);
     			kY_Index = k2 + (nyB/2);
-    			sigma = (sin(abs(k1*pi2N_X))/fabs(k1*pi2N_X))*(sin(abs(k2*pi2N_Y))/abs(k2*pi2N_Y));
+    			sigma = (std::sin(std::abs(k1*pi2N_X))/std::fabs(k1*pi2N_X))*(std::sin(std::abs(k2*pi2N_Y))/std::abs(k2*pi2N_Y));
     	        realtrans_B(kX_Index,kY_Index)  *= sigma;
     	        imagtrans_B(kX_Index,kY_Index)  *= sigma;
     			}
@@ -321,7 +321,7 @@ class FourierInterpolation2d
     			{
     			kX_Index = k1 + (nxB/2);
     			kY_Index = k2 + (nyB/2);
-    			sigma = (sin(abs(k1*pi2N_X))/fabs(k1*pi2N_X))*(sin(abs(k2*pi2N_Y))/abs(k2*pi2N_Y));
+    			sigma = (std::sin(std::abs(k1*pi2N_X))/std::fabs(k1*pi2N_X))*(std::sin(std::abs(k2*pi2N_Y))/std::abs(k2*pi2N_Y));
     	        realtrans_B(kX_Index,kY_Index)  *= sigma;
     	        imagtrans_B(kX_Index,kY_Index)  *= sigma;
     			}

@@ -30,7 +30,6 @@
 #include <vector>
 #include <functional>
 #include <cmath>
-using namespace std;
 
 
 #include "LegendreApprox3d.h"
@@ -210,7 +209,7 @@ double evaluate(double x,double y,double z)
 		   	   	   	   	   	   	    z,interpZmin,interpZmax,Fvalues);
 }
 
-void evaluateDerivative(double x,double y, double z, vector<double>& dFvalues)
+void evaluateDerivative(double x,double y, double z, std::vector<double>& dFvalues)
 {
    setLocalData(x,y,z);
    return legendreApprox3d.evaluateDerivative(x,interpXmin,interpXmax,
@@ -219,7 +218,7 @@ void evaluateDerivative(double x,double y, double z, vector<double>& dFvalues)
                                                 Fvalues,dFvalues);
 }
 
-void evaluate(double x, double y, double z, double& Fval, vector<double>& dFvalues)
+void evaluate(double x, double y, double z, double& Fval, std::vector<double>& dFvalues)
 {
 	setLocalData(x,y,z);
     legendreApprox3d.evaluate(x,interpXmin,interpXmax,
@@ -381,7 +380,7 @@ void setLocalData(double x,double y,double z)
 
 	LegendreApprox3d legendreApprox3d;
 
-	vector<double>   Fvalues;
+	std::vector<double>   Fvalues;
 
 	double           interpXmin;
 	double           interpXmax;

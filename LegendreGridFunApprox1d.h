@@ -9,7 +9,7 @@
 #include <vector>
 #include <functional>
 #include <cmath>
-using namespace std;
+
 
 
 #include "LegendreApprox1d.h"
@@ -174,7 +174,7 @@ void setLocalData(double x)
     double* FDataPtr;
 
 	LegendreApprox1d legendreApprox1d;
-	vector<double>   Fvalues;
+	std::vector<double>   Fvalues;
 	double           interpXmin;
 	double           interpXmax;
 };

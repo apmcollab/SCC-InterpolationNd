@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <vector>
 #include <stdexcept>
-using namespace std;
+
 
  /*
 #############################################################################
@@ -166,7 +166,7 @@ void createNodesAndWeightsData(double xPos, double yPos, const SCC::GridFunction
     	prodIndex++;
     }}
 
-    // Create weight vector
+    // Create weight std::vector
 
     for(long i = 0; i < interpSystemSize; i++)
     {
@@ -310,8 +310,8 @@ void createInterpolationMatrixInvTranspose()
     int   legendreInd_Y;
 
 	SCC::DoubleVector2d interpMatrixInvTranspose;
-    vector<double>        evaluationVector;
-    vector<double>        weightVector;
+    std::vector<double>        evaluationVector;
+    std::vector<double>        weightVector;
 
     long xMinIndex; long xMaxIndex;
     long yMinIndex; long yMaxIndex;

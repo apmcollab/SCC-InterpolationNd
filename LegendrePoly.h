@@ -1,7 +1,6 @@
 #ifndef _LegendrePoly_
 #define _LegendrePoly_
 #include <cmath>
-using namespace std;
 //
 // P_[0](x) = 1
 // P_[1](x) = x
@@ -113,7 +112,7 @@ public:
 	double evaluate(double s, int index) const
 	{
 	double x          = (2*s - (a+b))/(b-a);
-	double normFactor = 1.0/(sqrt((b-a)/(2.0*index +1.0)));
+	double normFactor = 1.0/(std::sqrt((b-a)/(2.0*index +1.0)));
     double Fkm1;
 	double Fk;
     double Fkp1;

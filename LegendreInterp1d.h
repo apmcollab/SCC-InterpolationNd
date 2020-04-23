@@ -1,5 +1,3 @@
-#ifndef _LegendreInterp1d_
-#define _LegendreInterp1d_
 
 #include "GridFunctionNd/SCC_GridFunction1d.h"
 #include "DoubleVectorNd/SCC_DoubleVector1d.h"
@@ -7,10 +5,15 @@
 
 #include "DoubleVectorNd/SCC_DoubleVector2d.h"
 
+
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
 #include <stdexcept>
+
+
+#ifndef _LegendreInterp1d_
+#define _LegendreInterp1d_
 
 
  /*
@@ -351,7 +354,7 @@ double* BdataPtr, long P)
       {
         if( *Rptr == 0.0 ){ *Cptr = 1.0; *Sptr =0.0;}
         else
-        { if( fabs(*Rptr) > fabs(*piv_elem) )
+        { if( std::abs(*Rptr) > std::abs(*piv_elem) )
           { tau   = -(*piv_elem)/(*Rptr);
             *Sptr = 1.0/sqrt(1.0 + tau*tau);
             *Cptr = (*Sptr)*tau;
@@ -405,13 +408,13 @@ double* BdataPtr, long P)
     for( k = 1; k <= n; k++)
     {  R_col_norm = 0.0;
        for( Rptr = RdataPtr + (k-1)*m; Rptr < RdataPtr + (k-1)*m + k; Rptr++ )
-       {R_col_norm += fabs(*Rptr);}
+       {R_col_norm += std::abs(*Rptr);}
        if(R_norm < R_col_norm ) R_norm = R_col_norm;
      }
 
     long singular_flag = 0;
     for( j=1; j <= n ; j++)
-    {if(fabs(*(RdataPtr + (j-1) + (j-1)*m)) <= machine_eps*R_norm ) singular_flag = 1;}
+    {if(std::abs(*(RdataPtr + (j-1) + (j-1)*m)) <= machine_eps*R_norm ) singular_flag = 1;}
 
     if( singular_flag == 1)
     {

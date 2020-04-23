@@ -32,7 +32,8 @@
 #include "LegendrePolyEvaluator.h"
 
 #include <vector>
-using namespace std;
+#include <exception>
+#include <string>
 
 
 #ifndef _LegendreApprox3d_
@@ -171,7 +172,7 @@ void initialize(int degreeX, int degreeY,int degreeZ)
 double evaluate(double x, double xMin, double xMax,
                 double y, double yMin, double yMax,
                 double z, double zMin, double zMax,
-                vector<double>& F)
+                std::vector<double>& F)
 {
     assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
 
@@ -229,7 +230,7 @@ double evaluate(double x, double xMin, double xMax,
 void evaluateDerivative(double x, double xMin, double xMax,
                         double y, double yMin, double yMax,
                         double z, double zMin, double zMax,
-                        vector<double>& F, vector<double>& dFvalues)
+                        std::vector<double>& F, std::vector<double>& dFvalues)
 {
     assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
 
@@ -304,7 +305,7 @@ void evaluateDerivative(double x, double xMin, double xMax,
 void evaluate(double x, double xMin, double xMax,
                         double y, double yMin, double yMax,
                         double z, double zMin, double zMax,
-                        vector<double>& F, double& Fval, vector<double>& dFvalues)
+                        std::vector<double>& F, double& Fval, std::vector<double>& dFvalues)
 {
     assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
 
@@ -386,15 +387,15 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     long LDA   = N;
     long LDAF  = N;
 
-    vector <long >   IPIV(N);
+    std::vector <long >   IPIV(N);
     long* IPIVptr = &IPIV[0];
 
     char  EQED;
 
-    vector<double>   R(N);
+    std::vector<double>   R(N);
     double* Rptr  = &R[0];
 
-    vector<double>    C(N);
+    std::vector<double>    C(N);
     double* Cptr  =  &C[0];
 
     long NRHS     = N;
@@ -410,14 +411,14 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     long LDX     = N;
 
     double         RCOND;
-    vector<double>  FERR(NRHS);
-    vector<double>  BERR(NRHS);
+    std::vector<double>  FERR(NRHS);
+    std::vector<double>  BERR(NRHS);
 
 
-    vector<double>   WORK(4*N);
+    std::vector<double>   WORK(4*N);
     double* WORKptr = &WORK[0];
 
-    vector<long>       IWORK(N);
+    std::vector<long>       IWORK(N);
     long* IWORKptr  = &IWORK[0];
 
     long   INFO = 0;
@@ -430,11 +431,14 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
 
     if(INFO != 0)
     {
-        cerr << "dgesvx  Failed : INFO = " << INFO  << endl;
-        exit((int)1);
+    	std::string errMsg = "\nDGESVX Solver failed \n";
+    	errMsg            += (std::string) "DGESVXerror info : ";
+    	errMsg            += std::to_string(info);
+    	errMsg            += (std::string)"\n";
+    	throw std::runtime_error(errMsg);
     }
 
-        //cout << "RCOND " << RCOND << endl;
+    //cout << "RCOND " << RCOND << endl;
 	}
 
 
@@ -443,16 +447,16 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
 	int degreeZ;
 
 
-    SCC::LapackMatrix    Ainv;
-    vector<double>       coeff;
+    SCC::LapackMatrix         Ainv;
+    std::vector<double>       coeff;
 
-	vector<double>      legendreValues_X;
-	vector<double>      legendreValues_Y;
-	vector<double>      legendreValues_Z;
+	std::vector<double>      legendreValues_X;
+	std::vector<double>      legendreValues_Y;
+	std::vector<double>      legendreValues_Z;
 
-	vector<double>     legendreDvalues_X;
-	vector<double>     legendreDvalues_Y;
-	vector<double>     legendreDvalues_Z;
+	std::vector<double>     legendreDvalues_X;
+	std::vector<double>     legendreDvalues_Y;
+	std::vector<double>     legendreDvalues_Z;
 
     LegendrePolyEvaluator legendreEval_X;
     LegendrePolyEvaluator legendreEval_Y;

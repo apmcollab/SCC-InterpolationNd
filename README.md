@@ -3,7 +3,7 @@ Classes and functions for interpolation of 1d, 2d, and 3d data.
 ### Prerequisites
 C++11, Lapack
 ### Versioning
-Release : 1.0.4
+Release : 1.0.5
 ### Authors
 Chris Anderson
 ### License

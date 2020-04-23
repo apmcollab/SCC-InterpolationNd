@@ -1,8 +1,7 @@
-#ifndef _ProductLegendrePoly3d_
-#define _ProductLegendrePoly3d_
-
 #include "LegendrePoly.h"
 
+#ifndef _ProductLegendrePoly3d_
+#define _ProductLegendrePoly3d_
 
  /*
 #############################################################################
@@ -110,15 +109,11 @@ public:
 	return polyX(xPos)*polyY(yPos)*polyZ(zPos);
 	}
 
-
-#if __cplusplus > 199711L
 	std::function<double(double, double , double)> getEvaluationPtr() const
 	{
 	std::function<double(double, double, double)> F = [this](double x, double y, double z) {return this->operator()(x,y,z);};
 	return std::move(F);
 	}
-#endif
-
 
 	double a; double b;
 	double c; double d;

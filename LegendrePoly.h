@@ -1,6 +1,7 @@
 #ifndef _LegendrePoly_
 #define _LegendrePoly_
 #include <cmath>
+#include <functional>
 //
 // P_[0](x) = 1
 // P_[1](x) = x
@@ -101,13 +102,13 @@ public:
     return evaluate(s,index);
 	}
 
-#if __cplusplus > 199711L
+
 	std::function<double(double)> getEvaluationPtr() const
 	{
 	std::function<double(double)> F = [this](double x) {return this->operator()(x);};
 	return std::move(F);
 	}
-#endif
+ 
 
 	double evaluate(double s, int index) const
 	{

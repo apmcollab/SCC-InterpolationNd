@@ -432,8 +432,8 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     if(INFO != 0)
     {
     	std::string errMsg = "\nDGESVX Solver failed \n";
-    	errMsg            += (std::string) "DGESVXerror info : ";
-    	errMsg            += std::to_string(info);
+    	errMsg            += (std::string) "DGESVX error info : ";
+    	errMsg            += std::to_string(INFO);
     	errMsg            += (std::string)"\n";
     	throw std::runtime_error(errMsg);
     }

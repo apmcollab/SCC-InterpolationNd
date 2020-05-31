@@ -12,8 +12,8 @@
 #include <stdexcept>
 
 
-#ifndef _LegendreInterp1d_
-#define _LegendreInterp1d_
+#ifndef LEGENDRE_INTERP_1D_
+#define LEGENDRE_INTERP_1D_
 
 
  /*

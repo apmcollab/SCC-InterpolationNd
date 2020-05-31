@@ -1,7 +1,10 @@
-#ifndef _LegendrePoly_
-#define _LegendrePoly_
+
 #include <cmath>
 #include <functional>
+
+#ifndef  LEGENDRE_POLY_
+#define  LEGENDRE_POLY_
+
 //
 // P_[0](x) = 1
 // P_[1](x) = x

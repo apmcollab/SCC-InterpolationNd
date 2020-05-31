@@ -3,8 +3,8 @@
 #include "DoubleVectorNd/SCC_DoubleVector3d.h"
 #include "GridFunctionNd/SCC_GridFunction3d.h"
 
-#ifndef _FixedLocationLegendreInterp3d_
-#define _FixedLocationLegendreInterp3d_
+#ifndef FIXED_LOCATION_LEGENDRE_INTERP_3D_
+#define FIXED_LOCATION_LEGENDRE_INTERP_3D_
 
 
 /*

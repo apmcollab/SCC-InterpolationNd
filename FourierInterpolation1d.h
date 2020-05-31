@@ -9,8 +9,8 @@
 #include "GridFunctionNd/SCC_GridFunction1d.h"
 #include "FFTW3_InterfaceNd/SCC_fftw3_1d.h"
 
-#ifndef _FourierInterpolation1d_
-#define _FourierInterpolation1d_
+#ifndef FOURIER_INTERPOLATION_1D_
+#define FOURIER_INTERPOLATION_1D_
 
 class FourierInterpolation1d
 {

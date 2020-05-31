@@ -8,8 +8,8 @@
 #include <functional>
 #include <cmath>
 
-#ifndef _LegendrePolyEvaluator_
-#define _LegendrePolyEvaluator_
+#ifndef LEGENDRE_POLY_EVALUATOR_
+#define LEGENDRE_POLY_EVALUATOR_
 
 //
 // Legendre polynomials

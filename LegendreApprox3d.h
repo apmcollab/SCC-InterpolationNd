@@ -36,8 +36,8 @@
 #include <string>
 
 
-#ifndef _LegendreApprox3d_
-#define _LegendreApprox3d_
+#ifndef  LEGENDRE_APPROX_3D_
+#define  LEGENDRE_APPROX_3D_
 
 class LegendreApprox3d
 {

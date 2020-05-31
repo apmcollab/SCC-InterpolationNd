@@ -6,8 +6,8 @@
 #include "GridFunctionNd/SCC_GridFunction2d.h"
 #include "FFTW3_InterfaceNd/SCC_fftw3_2d.h"
 
-#ifndef _FourierInterpolation2d_
-#define _FourierInterpolation2d_
+#ifndef FOURIER_INTERPOLATION_2D_
+#define FOURIER_INTERPOLATION_2D_
 
 //
 // This class implements Fourier interpolation on double* arrays holding 2D data

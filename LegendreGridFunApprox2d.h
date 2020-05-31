@@ -14,8 +14,8 @@
 
 #include "LegendreApprox2d.h"
 
-#ifndef _LegendreGridFunApprox2d_
-#define _LegendreGridFunApprox2d_
+#ifndef LEGENDRE_GRID_FUN_APPROX_2D_
+#define LEGENDRE_GRID_FUN_APPROX_2D_
 
 //
 //

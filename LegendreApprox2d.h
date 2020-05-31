@@ -32,8 +32,8 @@
 
 #include <vector>
 
-#ifndef _LegendreApprox2d_
-#define _LegendreApprox2d_
+#ifndef  LEGENDRE_APPROX_2D_
+#define  LEGENDRE_APPROX_2D_
 
 class LegendreApprox2d
 {

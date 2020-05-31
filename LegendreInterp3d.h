@@ -11,8 +11,8 @@
 #include <array>
 
 
-#ifndef _LegendreInterp3d_
-#define _LegendreInterp3d_
+#ifndef LEGENDRE_INTERP_3D_
+#define LEGENDRE_INTERP_3D_
 
 
 /*

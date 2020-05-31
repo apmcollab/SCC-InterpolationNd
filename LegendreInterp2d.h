@@ -11,8 +11,8 @@
 #include <vector>
 #include <stdexcept>
 
-#ifndef _LegendreInterp2d_
-#define _LegendreInterp2d_
+#ifndef LEGENDRE_INTERP_2D_
+#define LEGENDRE_INTERP_2D_
 
  /*
 #############################################################################

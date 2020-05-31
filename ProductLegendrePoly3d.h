@@ -1,7 +1,7 @@
 #include "LegendrePoly.h"
 
-#ifndef _ProductLegendrePoly3d_
-#define _ProductLegendrePoly3d_
+#ifndef PRODUCT_LEGENDRE_POLY_3D_
+#define PRODUCT_LEGENDRE_POLY_3D_
 
  /*
 #############################################################################

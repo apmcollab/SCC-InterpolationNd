@@ -34,8 +34,8 @@
 
 #include "LegendreApprox3d.h"
 
-#ifndef _LegendreGridFunApprox3d_
-#define _LegendreGridFunApprox3d_
+#ifndef LEGENDRE_GRID_FUN_APPROX_3D_
+#define LEGENDRE_GRID_FUN_APPROX_3D_
 
 //
 //

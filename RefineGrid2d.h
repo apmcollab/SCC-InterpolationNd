@@ -141,11 +141,12 @@ class RefineGrid2d
 	    }}
 
 	    // Fill in top and right side
+		long i; long j;
 
-	    long j = yPanels;
+	    j = yPanels;
 	    yPos   = yMax;
 
-	    for(long i = 0; i < xPanels; i++)
+	    for(i = 0; i < xPanels; i++)
 	    {
 	    FN(N*i,N*j)   = F(i,j);
 	    for(long p = 1; p < N; p++)
@@ -155,10 +156,10 @@ class RefineGrid2d
 	    }
 	    }
 
-	    long i = xPanels;
+	    i = xPanels;
 	    xPos   = xMax;
 
-	    for(long j = 0; j < yPanels; j++)
+	    for(j = 0; j < yPanels; j++)
 	    {
 	    FN(N*i,N*j)   = F(i,j);
 	    for(long q = 1; q < N; q++)

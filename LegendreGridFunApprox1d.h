@@ -132,7 +132,7 @@ void setLocalData(double x)
    long    interpIndexStart;
    long      interpIndexEnd;
 
-   interpIndexBase = floor((x-xDataMin)/hData);
+   interpIndexBase = (long)(floor((x-xDataMin)/hData));
    if(interpIndexBase < 0)            interpIndexBase = 0;
    if(interpIndexBase >= xDataPanels) interpIndexBase = xDataPanels-1;
 

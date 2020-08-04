@@ -183,7 +183,7 @@ void setLocalData(double x,double y)
    long    interpIndexStartY;
    long      interpIndexEndY;
 
-   interpIndexBaseX = floor((x-xDataMin)/hxData);
+   interpIndexBaseX = (long)floor((x-xDataMin)/hxData);
    if(interpIndexBaseX < 0)            interpIndexBaseX = 0;
    if(interpIndexBaseX >= xDataPanels) interpIndexBaseX = xDataPanels-1;
 
@@ -209,7 +209,7 @@ void setLocalData(double x,double y)
    interpXmin = xDataMin + interpIndexStartX*hxData;
    interpXmax = xDataMin + interpIndexEndX*hxData;
 
-   interpIndexBaseY = floor((y-yDataMin)/hyData);
+   interpIndexBaseY = (long)floor((y-yDataMin)/hyData);
    if(interpIndexBaseY < 0)            interpIndexBaseY = 0;
    if(interpIndexBaseY >= yDataPanels) interpIndexBaseY = yDataPanels-1;
 

@@ -20,6 +20,38 @@ class RefineGrid2d
 {
 	public:
 
+	RefineGrid2d()
+	{
+	initialize();
+	}
+
+    RefineGrid2d(const RefineGrid2d& R)
+	{
+	#ifndef _OPENMP
+	interp2d.initialize(R.interp2d);
+    #else
+    for(size_t i = 0; i < interp2dA.size(); i++)
+    {
+    interp2dA[i].initialize(R.interp2dA[i]);
+    }
+    #endif
+	}
+
+	void initialize()
+	{
+    #ifndef _OPENMP
+	interp2d.initialize();
+    #else
+    for(size_t i = 0; i < interp2dA.size(); i++)
+    {
+    interp2dA[i].initialize();
+    }
+    #endif
+	}
+
+
+
+
 	void refineNX(int degreeX, int degreeY, int N, SCC::GridFunction2d& F, SCC::GridFunction2d& FN)
 	{
 	    long xPanels = F.getXpanelCount();

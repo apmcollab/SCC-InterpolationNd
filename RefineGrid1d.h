@@ -15,6 +15,22 @@ class RefineGrid1d
 {
 	public:
 
+
+    RefineGrid1d()
+	{
+	initialize();
+	}
+
+    RefineGrid1d(const RefineGrid1d& R)
+	{
+	interp1d.initialize(R.interp1d);
+	}
+
+	void initialize()
+	{
+	interp1d.initialize();
+	}
+
 	void refineNX(int degree, int N, SCC::GridFunction1d& F, SCC::GridFunction1d& FN)
 	{
 	    long xPanels = F.getXpanelCount();

@@ -14,7 +14,10 @@
 #define REFINE_GRID_2D_
 
 #include "GridFunctionNd/SCC_GridFunction2d.h"
-#include "InterpolationNd/LegendreGridFunApprox2d.h"
+#include "SCC_LegendreGridFunApprox2d.h"
+
+namespace SCC
+{
 
 class RefineGrid2d
 {
@@ -217,6 +220,8 @@ class RefineGrid2d
 	std::vector<LegendreGridFunApprox2d> interp2dA;
 #endif
 };
+
+} // namespace SCC
 #endif
 
 

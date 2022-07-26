@@ -1,5 +1,5 @@
 
-#include "LegendreInterp1d.h"
+#include "SCC_LegendreInterp1d.h"
 #include "DoubleVectorNd/SCC_DoubleVector1d.h"
 #include "GridFunctionNd/SCC_GridFunction1d.h"
 
@@ -28,6 +28,8 @@
 #############################################################################
 */
 
+namespace SCC
+{
 
 class FixedLocationLegendreInterp1d
 {
@@ -77,4 +79,5 @@ public:
 
 	SCC::DoubleVector1d interpWeights;
 };
+} // SCC namespace
 #endif

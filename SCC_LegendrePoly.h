@@ -40,7 +40,8 @@
 #
 #############################################################################
 */
-
+namespace SCC
+{
 
 class LegendrePoly
 {
@@ -142,5 +143,8 @@ public:
 	double   b;
 	int  index;
 };
+
+}// namespace SCC
+
 #endif
 

@@ -28,6 +28,8 @@
 #############################################################################
 */
 
+namespace SCC
+{
 
 class FixedLocationLegendreInterp3d
 {
@@ -96,4 +98,6 @@ public:
 	SCC::DoubleVector3d interpWeights;
 
 };
+
+} // namespace SCC
 #endif

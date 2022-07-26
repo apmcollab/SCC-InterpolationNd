@@ -28,12 +28,15 @@
 
 #include "LapackInterface/SCC_LapackMatrix.h"
 #include "LapackInterface/SCC_LapackHeaders.h"
-#include "LegendrePolyEvaluator.h"
+#include "SCC_LegendrePolyEvaluator.h"
 
 #include <vector>
 
 #ifndef LEGENDRE_APPROX_1D_
 #define LEGENDRE_APPROX_1D_
+
+namespace SCC
+{
 
 class LegendreApprox1d
 {
@@ -313,7 +316,6 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
     LegendrePolyEvaluator legendreEval_X;
 };
 
-
-
+} // namespace SCC
 
 #endif /* _LegendreApprox1d_ */

@@ -1,7 +1,6 @@
 
 
-#include "LegendrePoly.h"
-
+#include "SCC_LegendrePoly.h"
 
 #ifndef PRODUCT_LEGENDRE_POLY_2D_
 #define PRODUCT_LEGENDRE_POLY_2D_
@@ -26,7 +25,8 @@
 #
 #############################################################################
 */
-
+namespace SCC
+{
 
 class ProductLegendrePoly2d
 {
@@ -115,5 +115,6 @@ public:
 	LegendrePoly polyY;
 };
 
+} // namespace SCC
 
 #endif

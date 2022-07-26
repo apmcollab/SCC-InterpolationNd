@@ -12,7 +12,7 @@
 
 
 
-#include "LegendreApprox2d.h"
+#include "SCC_LegendreApprox2d.h"
 
 #ifndef LEGENDRE_GRID_FUN_APPROX_2D_
 #define LEGENDRE_GRID_FUN_APPROX_2D_
@@ -32,6 +32,9 @@
 // The requested interpolation degree must be > 0.
 //
 //
+
+namespace SCC
+{
 
 class LegendreGridFunApprox2d
 {
@@ -289,7 +292,7 @@ void setLocalData(double x,double y)
 };
 
 
-
+} // namespace SCC
 
 
 #endif /* _LegendreGridFunApprox2d_ */

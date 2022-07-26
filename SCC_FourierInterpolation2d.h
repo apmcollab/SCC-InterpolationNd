@@ -40,6 +40,10 @@
 // (C) Chris Anderson March 12, 2012
 //
 //
+
+namespace SCC
+{
+
 class FourierInterpolation2d
 {
 	public :
@@ -348,4 +352,5 @@ class FourierInterpolation2d
     SCC::DoubleVector2d realtrans_B; SCC::DoubleVector2d imagtrans_B;
 };
 
+} // namespace SCC
 #endif

@@ -12,7 +12,7 @@
 
 
 
-#include "LegendreApprox1d.h"
+#include "SCC_LegendreApprox1d.h"
 
 #ifndef LEGENDRE_GRID_FUN_APPROX_1D_
 #define LEGENDRE_GRID_FUN_APPROX_1D_
@@ -32,6 +32,9 @@
 // The requested interpolation degree must be > 0.
 //
 //
+namespace SCC
+{
+
 
 class LegendreGridFunApprox1d
 {
@@ -179,7 +182,5 @@ void setLocalData(double x)
 	double           interpXmax;
 };
 
-
-
-
+} // namespace SCC
 #endif /* _LegendreGridFunApprox1d_ */

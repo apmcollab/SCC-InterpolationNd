@@ -1,10 +1,9 @@
 /*
- * LegendreApprox3d.h
+ * LegendreApprox2d.h
  *
  *  Created on: Jul 22, 2018
  *      Author: anderson
  */
-
 
 /*
 #############################################################################
@@ -29,52 +28,50 @@
 
 #include "LapackInterface/SCC_LapackMatrix.h"
 #include "LapackInterface/SCC_LapackHeaders.h"
-#include "LegendrePolyEvaluator.h"
+#include "SCC_LegendrePolyEvaluator.h"
 
 #include <vector>
-#include <exception>
-#include <string>
 
+#ifndef  LEGENDRE_APPROX_2D_
+#define  LEGENDRE_APPROX_2D_
 
-#ifndef  LEGENDRE_APPROX_3D_
-#define  LEGENDRE_APPROX_3D_
+namespace SCC
+{
 
-class LegendreApprox3d
+class LegendreApprox2d
 {
 public:
 
-LegendreApprox3d()
+LegendreApprox2d()
 {
 	initialize();
 }
 
-LegendreApprox3d(const LegendreApprox3d& P)
+LegendreApprox2d(const LegendreApprox2d& P)
 {
 	initialize(P);
 }
 
-LegendreApprox3d(int degreeX, int degreeY, int degreeZ)
+LegendreApprox2d(int degreeX, int degreeY)
 {
-	initialize(degreeX, degreeY, degreeZ);
+	initialize(degreeX, degreeY);
 }
 
-virtual ~LegendreApprox3d(){};
+virtual ~LegendreApprox2d(){};
 
 void initialize()
 {
 	degreeX =  -1;
 	degreeY =  -1;
-	degreeZ =  -1;
 
 	Ainv.initialize();
 	coeff.clear();
 }
 
-void initialize(const LegendreApprox3d& P)
+void initialize(const LegendreApprox2d& P)
 {
     degreeX =  P.degreeX;
     degreeY =  P.degreeY;
-    degreeZ =  P.degreeZ;
 
     Ainv.initialize(P.Ainv);
 
@@ -82,38 +79,29 @@ void initialize(const LegendreApprox3d& P)
 
     legendreValues_X = P.legendreValues_X;
     legendreValues_Y = P.legendreValues_Y;
-    legendreValues_Z = P.legendreValues_Z;
 
     legendreDvalues_X = P.legendreDvalues_X;
     legendreDvalues_Y = P.legendreDvalues_Y;
-    legendreDvalues_Z = P.legendreDvalues_Z;
 
     legendreEval_X   = P.legendreEval_X;
     legendreEval_Y   = P.legendreEval_Y;
-    legendreEval_Z   = P.legendreEval_Z;
 }
 
-void initialize(int degreeX, int degreeY,int degreeZ)
+void initialize(int degreeX, int degreeY)
 {
     this->degreeX = degreeX;
     this->degreeY = degreeY;
-    this->degreeZ = degreeZ;
 
 	int NX = degreeX+1; // Number of equi-spaced data points in X-direction
 	int NY = degreeY+1; // Number of equi-spaced data points in Y-direction
-	int NZ = degreeZ+1; // Number of equi-spaced data points in Y-direction
 
-
-	coeff.resize(NX*NY*NZ,0.0);
+	coeff.resize(NX*NY,0.0);
 
 	legendreValues_X.resize(NX,0.0);
 	legendreValues_Y.resize(NY,0.0);
 
 	legendreDvalues_X.resize(NX,0.0);
 	legendreDvalues_Y.resize(NY,0.0);
-
-	legendreDvalues_Z.resize(NZ,0.0);
-	legendreDvalues_Z.resize(NZ,0.0);
 
     // Create matrix for that maps function values at grid
     // points to coefficients of the interpolation Legendre
@@ -123,21 +111,18 @@ void initialize(int degreeX, int degreeY,int degreeZ)
 
 	legendreEval_X.initialize(0,(double)degreeX,degreeX);
 	legendreEval_Y.initialize(0,(double)degreeY,degreeY);
-	legendreEval_Z.initialize(0,(double)degreeZ,degreeZ);
 
     //
     //  Construct matrix coefficients for interpolation at
     //  equispaced data points
     //
 
-    long N = NX*NY*NZ;
-
+    long N = NX*NY;
 
     SCC::LapackMatrix A(N,N);
     Ainv.initialize(N,N);
 
-
-    double xI; double yJ; double zK;
+    double xI; double yJ;
 
 	for(int i = 0; i < NX; i++)
 	{
@@ -147,22 +132,16 @@ void initialize(int degreeX, int degreeY,int degreeZ)
 	{
 	yJ = (double)j;
 	legendreEval_Y.evaluate(yJ,legendreValues_Y);
-	for(int k = 0; k < NZ; k++)
-	{
-	zK = (double)k;
-	legendreEval_Z.evaluate(zK,legendreValues_Z);
 
 		for(int p = 0; p < NX; p++)
 		{
-		for(int q = 0; q < NY; q++)
-		{
-		for(int r = 0; r < NZ; r++)
-		{
-			A(k + j*NZ + i*NZ*NY,r + q*NZ + p*NZ*NY) = legendreValues_X[p]*legendreValues_Y[q]*legendreValues_Z[r];
-		}}}
-	}}}
+			for(int q = 0; q < NY; q++)
+			{
+				A(j + i*NY,q + p*NY) = legendreValues_X[p]*legendreValues_Y[q];
+		}}
+	}}
 
-    if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0)) {Ainv(0,0) = 1.0/A(0,0);}
+    if((degreeX == 0)&&(degreeY == 0)) {Ainv(0,0) = 1.0/A(0,0);}
     else
     {
     computeInverse(A, Ainv);
@@ -171,33 +150,20 @@ void initialize(int degreeX, int degreeY,int degreeZ)
 
 double evaluate(double x, double xMin, double xMax,
                 double y, double yMin, double yMax,
-                double z, double zMin, double zMax,
                 std::vector<double>& F)
 {
-    assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
+    assert((int)F.size() == (degreeX+1)*(degreeY+1));
 
-    if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0)){return F[0];}
-
-    // Replace matrix class product with inline invocation of dgemv
-
-    // coeff = Ainv*F;
+    if((degreeX == 0)&&(degreeY == 0)){return F[0];}
 
     // Create coefficients of the approximation
 
-    long rows      = (degreeX+1)*(degreeY+1)*(degreeZ+1);
-    long cols      = rows;
-    char TRANS     = 'N';
-    double ALPHA   = 1.0;
-    double BETA    = 0.0;
-    long INCX      = 1;
-    long INCY      = 1;
-
-    dgemv_(&TRANS,&rows,&cols,&ALPHA,Ainv.getDataPointer(),&rows,&F[0],&INCX,&BETA,&coeff[0],&INCY);
+    coeff = Ainv*F;
 
 	// Evaluate interpolant at relative locations in
 	// region [0, degreeX]x[0,degreeY]
 
-    double xI; double yJ; double zK;
+    double xI; double yJ;
 
 	xI = (x-xMin)*(degreeX)/(xMax-xMin);
 	legendreEval_X.evaluate(xI,legendreValues_X);
@@ -205,12 +171,8 @@ double evaluate(double x, double xMin, double xMax,
 	yJ = (y-yMin)*(degreeY)/(yMax-yMin);
 	legendreEval_Y.evaluate(yJ,legendreValues_Y);
 
-    zK    = (z-zMin)*(degreeZ)/(zMax-zMin);
-	legendreEval_Z.evaluate(zK,legendreValues_Z);
-
 	int NX = degreeX+1;
 	int NY = degreeY+1;
-	int NZ = degreeZ+1;
 
 	double appVal = 0.0;
 
@@ -218,107 +180,27 @@ double evaluate(double x, double xMin, double xMax,
 	{
 	for(int q = 0; q < NY; q++)
 	{
-	for(int r = 0; r < NZ; r++)
-	{
-	appVal +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreValues_Y[q]*legendreValues_Z[r];
-	}}}
-
+	appVal +=  coeff[q + p*NY]*legendreValues_X[p]*legendreValues_Y[q];
+	}}
 
 	return appVal;
 }
 
 void evaluateDerivative(double x, double xMin, double xMax,
                         double y, double yMin, double yMax,
-                        double z, double zMin, double zMax,
                         std::vector<double>& F, std::vector<double>& dFvalues)
 {
-    assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
+    assert((int)F.size() == (degreeX+1)*(degreeY+1));
 
-    dFvalues.resize(3,0.0);
+    dFvalues.resize(2,0.0);
 
-    if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0))
-    {dFvalues[0]= 0.0; dFvalues[1] = 0.0; dFvalues[2] = 0.0; return;}
-
-    // Replace matrix class product with inline invocation of dgemv
-
-    // coeff = Ainv*F;
-
-    // Create coefficients of the approximation
-
-    long rows      = (degreeX+1)*(degreeY+1)*(degreeZ+1);
-    long cols      = rows;
-    char TRANS     = 'N';
-    double ALPHA   = 1.0;
-    double BETA    = 0.0;
-    long INCX      = 1;
-    long INCY      = 1;
-
-    dgemv_(&TRANS,&rows,&cols,&ALPHA,Ainv.getDataPointer(),&rows,&F[0],&INCX,&BETA,&coeff[0],&INCY);
-
-
-    double xI; double yJ; double zK;
-
-    xI = (x-xMin)*(degreeX)/(xMax-xMin);
-
-	legendreEval_X.evaluate(xI,legendreValues_X);
-	legendreEval_X.evaluateDerivatives(xI,legendreDvalues_X);
-
-	yJ = (y-yMin)*(degreeY)/(yMax-yMin);
-
-	legendreEval_Y.evaluate(yJ,legendreValues_Y);
-	legendreEval_Y.evaluateDerivatives(yJ,legendreDvalues_Y);
-
-	zK    = (z-zMin)*(degreeZ)/(zMax-zMin);
-	legendreEval_Z.evaluate(zK,legendreValues_Z);
-	legendreEval_Z.evaluateDerivatives(zK,legendreDvalues_Z);
-
-
-	int NX = degreeX+1;
-	int NY = degreeY+1;
-	int NZ = degreeZ+1;
-
-	double appValX = 0.0;
-	double appValY = 0.0;
-	double appValZ = 0.0;
-
-	for(int p = 0; p < NX; p++)
-	{
-	for(int q = 0; q < NY; q++)
-	{
-	for(int r = 0; r < NZ; r++)
-	{
-	appValX +=  coeff[r + q*NZ + p*NZ*NY]*legendreDvalues_X[p]*legendreValues_Y[q]*legendreValues_Z[r];
-	appValY +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreDvalues_Y[q]*legendreValues_Z[r];
-	appValZ +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreValues_Y[q]*legendreDvalues_Z[r];
-	}}}
-
-	appValX *= (degreeX/(xMax-xMin));
-	appValY *= (degreeY/(yMax-yMin));
-	appValZ *= (degreeZ/(zMax-zMin));
-
-	dFvalues[0] = appValX;
-	dFvalues[1] = appValY;
-	dFvalues[2] = appValZ;
-}
-
-
-void evaluate(double x, double xMin, double xMax,
-                        double y, double yMin, double yMax,
-                        double z, double zMin, double zMax,
-                        std::vector<double>& F, double& Fval, std::vector<double>& dFvalues)
-{
-    assert((int)F.size() == (degreeX+1)*(degreeY+1)*(degreeZ+1));
-
-    dFvalues.resize(3,0.0);
-
-    if((degreeX == 0)&&(degreeY == 0)&&(degreeZ == 0))
-    {Fval = 0.0; dFvalues[0]= 0.0; dFvalues[1] = 0.0; dFvalues[2] = 0.0; return;}
+    if((degreeX == 0)&&(degreeY == 0)){dFvalues[0]= 0.0; dFvalues[1] = 0.0; return;}
 
     // Create coefficients of the approximation
 
     coeff = Ainv*F;
 
-    double xI; double yJ; double zK;
+    double xI; double yJ;
 
     xI = (x-xMin)*(degreeX)/(xMax-xMin);
 
@@ -330,41 +212,78 @@ void evaluate(double x, double xMin, double xMax,
 	legendreEval_Y.evaluate(yJ,legendreValues_Y);
 	legendreEval_Y.evaluateDerivatives(yJ,legendreDvalues_Y);
 
-	zK    = (z-zMin)*(degreeZ)/(zMax-zMin);
-	legendreEval_Z.evaluate(zK,legendreValues_Z);
-	legendreEval_Z.evaluateDerivatives(zK,legendreDvalues_Z);
-
 	int NX = degreeX+1;
 	int NY = degreeY+1;
-	int NZ = degreeZ+1;
 
-    double appVal  = 0.0;
 	double appValX = 0.0;
 	double appValY = 0.0;
-	double appValZ = 0.0;
 
 	for(int p = 0; p < NX; p++)
 	{
 	for(int q = 0; q < NY; q++)
 	{
-	for(int r = 0; r < NZ; r++)
-	{
-	appVal  +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreValues_Y[q]*legendreValues_Z[r];
-	appValX +=  coeff[r + q*NZ + p*NZ*NY]*legendreDvalues_X[p]*legendreValues_Y[q]*legendreValues_Z[r];
-	appValY +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreDvalues_Y[q]*legendreValues_Z[r];
-	appValZ +=  coeff[r + q*NZ + p*NZ*NY]*legendreValues_X[p]*legendreValues_Y[q]*legendreDvalues_Z[r];
-	}}}
+	appValX +=  coeff[q + p*NY]*legendreDvalues_X[p]*legendreValues_Y[q];
+	appValY +=  coeff[q + p*NY]*legendreValues_X[p]*legendreDvalues_Y[q];
+	}}
 
 	appValX *= (degreeX/(xMax-xMin));
 	appValY *= (degreeY/(yMax-yMin));
-	appValZ *= (degreeZ/(zMax-zMin));
-
-    Fval        = appVal;
 
 	dFvalues[0] = appValX;
 	dFvalues[1] = appValY;
-	dFvalues[2] = appValZ;
+}
 
+
+void evaluate(double x, double xMin, double xMax,
+                        double y, double yMin, double yMax,
+                        std::vector<double>& F, double& Fval, std::vector<double>& dFvalues)
+{
+    assert((int)F.size() == (degreeX+1)*(degreeY+1));
+
+    dFvalues.resize(2,0.0);
+
+    if((degreeX == 0)&&(degreeY == 0)){Fval = 0.0; dFvalues[0]= 0.0; dFvalues[1] = 0.0; return;}
+
+       // Create coefficients of the approximation
+
+    coeff = Ainv*F;
+
+    double xI; double yJ;
+
+    xI = (x-xMin)*(degreeX)/(xMax-xMin);
+
+	legendreEval_X.evaluate(xI,legendreValues_X);
+	legendreEval_X.evaluateDerivatives(xI,legendreDvalues_X);
+
+	yJ = (y-yMin)*(degreeY)/(yMax-yMin);
+
+	legendreEval_Y.evaluate(yJ,legendreValues_Y);
+	legendreEval_Y.evaluateDerivatives(yJ,legendreDvalues_Y);
+
+	int NX = degreeX+1;
+	int NY = degreeY+1;
+
+    double appVal  = 0.0;
+	double appValX = 0.0;
+	double appValY = 0.0;
+
+	for(int p = 0; p < NX; p++)
+	{
+	for(int q = 0; q < NY; q++)
+	{
+	appVal  +=  coeff[q + p*NY]*legendreValues_X[p]*legendreValues_Y[q];
+
+	appValX +=  coeff[q + p*NY]*legendreDvalues_X[p]*legendreValues_Y[q];
+
+	appValY +=  coeff[q + p*NY]*legendreValues_X[p]*legendreDvalues_Y[q];
+	}}
+
+	appValX *= (degreeX/(xMax-xMin));
+	appValY *= (degreeY/(yMax-yMin));
+
+    Fval        =  appVal;
+	dFvalues[0] = appValX;
+	dFvalues[1] = appValY;
 }
 
 void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
@@ -431,39 +350,31 @@ void computeInverse(const SCC::LapackMatrix& Ainput, SCC::LapackMatrix& Ainv)
 
     if(INFO != 0)
     {
-    	std::string errMsg = "\nDGESVX Solver failed \n";
-    	errMsg            += (std::string) "DGESVX error info : ";
-    	errMsg            += std::to_string(INFO);
-    	errMsg            += (std::string)"\n";
-    	throw std::runtime_error(errMsg);
+        std::cerr << "dgesvx  Failed : INFO = " << INFO  << std::endl;
+        exit((int)1);
     }
 
-    //cout << "RCOND " << RCOND << endl;
+        //cout << "RCOND " << RCOND << endl;
 	}
 
 
 	int degreeX;
 	int degreeY;
-	int degreeZ;
 
+    SCC::LapackMatrix     Ainv;
+    std::vector<double>   coeff;
 
-    SCC::LapackMatrix         Ainv;
-    std::vector<double>       coeff;
+	std::vector<double>   legendreValues_X;
+	std::vector<double>   legendreValues_Y;
 
-	std::vector<double>      legendreValues_X;
-	std::vector<double>      legendreValues_Y;
-	std::vector<double>      legendreValues_Z;
-
-	std::vector<double>     legendreDvalues_X;
-	std::vector<double>     legendreDvalues_Y;
-	std::vector<double>     legendreDvalues_Z;
+	std::vector<double>   legendreDvalues_X;
+	std::vector<double>   legendreDvalues_Y;
 
     LegendrePolyEvaluator legendreEval_X;
     LegendrePolyEvaluator legendreEval_Y;
-    LegendrePolyEvaluator legendreEval_Z;
 };
 
+} // namespace SCC
 
 
-
-#endif /* _LegendreApprox3d_ */
+#endif /* _LegendreApprox2d_ */

@@ -12,6 +12,9 @@
 #ifndef FOURIER_INTERPOLATION_1D_
 #define FOURIER_INTERPOLATION_1D_
 
+namespace SCC
+{
+
 class FourierInterpolation1d
 {
 	public :
@@ -227,4 +230,5 @@ class FourierInterpolation1d
     SCC::DoubleVector1d realtrans_B; SCC::DoubleVector1d imagtrans_B;
 };
 
+} // namespace SCC
 #endif

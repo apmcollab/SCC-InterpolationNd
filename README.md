@@ -1,11 +1,11 @@
 ## InterplationNd
 Classes and functions for interpolation of 1d, 2d, and 3d data.
 ### Prerequisites
-C++11, Lapack
+C++17, Lapack
 ### Versioning
-Release : 1.0.7
+Release : 2.0.0
 ### Date
-August 4, 2020
+July 26, 2022
 ### Authors
 Chris Anderson
 ### License

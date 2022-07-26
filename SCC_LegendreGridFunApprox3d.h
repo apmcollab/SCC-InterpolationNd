@@ -32,7 +32,7 @@
 #include <cmath>
 
 
-#include "LegendreApprox3d.h"
+#include "SCC_LegendreApprox3d.h"
 
 #ifndef LEGENDRE_GRID_FUN_APPROX_3D_
 #define LEGENDRE_GRID_FUN_APPROX_3D_
@@ -52,6 +52,8 @@
 // The requested interpolation degree must be > 0.
 //
 //
+namespace SCC
+{
 
 class LegendreGridFunApprox3d
 {
@@ -396,6 +398,6 @@ void setLocalData(double x,double y,double z)
 
 
 
-
+} // namespace SCC
 
 #endif /* _LegendreGridFunApprox3d_ */

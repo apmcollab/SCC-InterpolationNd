@@ -1,6 +1,7 @@
 #include "GridFunctionNd/SCC_GridFunction3d.h"
 #include "DoubleVectorNd/SCC_DoubleVector3d.h"
-#include "ProductLegendrePoly3d.h"
+
+#include "SCC_ProductLegendrePoly3d.h"
 
 #include "DoubleVectorNd/SCC_DoubleVector2d.h"
 
@@ -35,6 +36,9 @@
 #
 #############################################################################
 */
+
+namespace SCC
+{
 
 
 class LegendreInterp3d
@@ -649,4 +653,7 @@ double* BdataPtr, long P)
 }
 
 };
+
+} // namespace SCC
+
 #endif

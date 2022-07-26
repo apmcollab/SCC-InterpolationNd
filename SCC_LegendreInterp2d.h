@@ -2,9 +2,9 @@
 
 #include "GridFunctionNd/SCC_GridFunction2d.h"
 #include "DoubleVectorNd/SCC_DoubleVector2d.h"
-#include "ProductLegendrePoly2d.h"
 
-#include "DoubleVectorNd/SCC_DoubleVector2d.h"
+#include "SCC_ProductLegendrePoly2d.h"
+
 
 #include <cstdio>
 #include <cstdlib>
@@ -34,6 +34,9 @@
 #
 #############################################################################
 */
+
+namespace SCC
+{
 
 
 class LegendreInterp2d
@@ -490,4 +493,7 @@ double* BdataPtr, long P)
 }
 
 };
+
+} // namespace SCC
+
 #endif

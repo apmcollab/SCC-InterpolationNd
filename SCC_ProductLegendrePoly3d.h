@@ -1,4 +1,4 @@
-#include "LegendrePoly.h"
+#include "SCC_LegendrePoly.h"
 
 #ifndef PRODUCT_LEGENDRE_POLY_3D_
 #define PRODUCT_LEGENDRE_POLY_3D_
@@ -23,7 +23,8 @@
 #
 #############################################################################
 */
-
+namespace SCC
+{
 
 class ProductLegendrePoly3d
 {
@@ -124,5 +125,5 @@ public:
 	LegendrePoly polyZ;
 };
 
-
+} // namespace SCC
 #endif

@@ -9,7 +9,10 @@
 #define REFINE_GRID_1D_
 
 #include "GridFunctionNd/SCC_GridFunction1d.h"
-#include "InterpolationNd/LegendreGridFunApprox1d.h"
+#include "SCC_LegendreGridFunApprox1d.h"
+
+namespace SCC
+{
 
 class RefineGrid1d
 {
@@ -61,6 +64,8 @@ class RefineGrid1d
 
 	LegendreGridFunApprox1d interp1d;
 };
+
+} // namespace SCC
 #endif
 
 

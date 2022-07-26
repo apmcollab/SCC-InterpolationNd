@@ -51,6 +51,9 @@
 //
 // The default interval is the standard interval of definition [-1,1].
 //
+namespace SCC
+{
+
 class LegendrePolyEvaluator
 {
     public:
@@ -172,5 +175,6 @@ class LegendrePolyEvaluator
 };
 
 
+} // namespace SCC
 
 #endif /* _LegendrePolyEvaluator_ */

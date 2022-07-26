@@ -353,7 +353,6 @@ public:
 
 	}
 
-    // Arrays of interpolation operators (one for each layer)
 
     long layerCount;
 

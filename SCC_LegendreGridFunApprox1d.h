@@ -139,9 +139,6 @@ void setLocalData(double x)
    if(interpIndexBase < 0)            interpIndexBase = 0;
    if(interpIndexBase >= xDataPanels) interpIndexBase = xDataPanels-1;
 
-   interpIndexStart = interpIndexBase;
-   interpIndexEnd   = interpIndexBase;
-
 
    interpIndexStart = interpIndexBase;
    interpIndexEnd   = interpIndexBase + 1;

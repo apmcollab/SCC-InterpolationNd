@@ -47,7 +47,7 @@ LegendreGridFunApprox2d()
 
 LegendreGridFunApprox2d(long degreeX, long xDataPanels, double xDataMin, double xDataMax,
 						long degreeY, long yDataPanels, double yDataMin, double yDataMax,
-                        double* FDataPtr)
+                        const double* FDataPtr)
 {
 	initialize(degreeX,xDataPanels, xDataMin, xDataMax,
 	           degreeY,yDataPanels, yDataMin, yDataMax, FDataPtr);
@@ -102,7 +102,7 @@ void initialize()
 
 void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax,
 			    long degreeY, long yDataPanels, double yDataMin, double yDataMax,
-                double* FDataPtr)
+                const double* FDataPtr)
 {
     long NX = (degreeX+1);
     long NY = (degreeY+1);
@@ -276,7 +276,7 @@ void setLocalData(double x,double y)
 	double  yDataMax;
 	double  hyData;
 
-	double* FDataPtr;
+	const double* FDataPtr;
 
 	LegendreApprox2d legendreApprox2d;
 

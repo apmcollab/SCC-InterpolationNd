@@ -67,7 +67,7 @@ LegendreGridFunApprox3d()
 LegendreGridFunApprox3d(long degreeX, long xDataPanels, double xDataMin, double xDataMax,
 						long degreeY, long yDataPanels, double yDataMin, double yDataMax,
 						long degreeZ, long zDataPanels, double zDataMin, double zDataMax,
-                        double* FDataPtr)
+                        const double* FDataPtr)
 {
 	initialize(degreeX,xDataPanels, xDataMin, xDataMax,
 	           degreeY,yDataPanels, yDataMin, yDataMax,
@@ -90,7 +90,7 @@ void clearFortranFlag()
 	fortranFlag = false;
 }
 
-void setDataPtr(double* FDataPtr = nullptr)
+void setDataPtr(const double* FDataPtr = nullptr)
 {
 	this->FDataPtr = FDataPtr;
 }
@@ -378,7 +378,7 @@ void setLocalData(double x,double y,double z)
 	double  hzData;
 
 
-	double* FDataPtr;
+	const double* FDataPtr;
 
 	LegendreApprox3d legendreApprox3d;
 

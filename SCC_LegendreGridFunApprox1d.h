@@ -45,7 +45,7 @@ LegendreGridFunApprox1d()
 	initialize();
 }
 
-LegendreGridFunApprox1d(long degreeX, long xDataPanels, double xDataMin, double xDataMax,double* FDataPtr)
+LegendreGridFunApprox1d(long degreeX, long xDataPanels, double xDataMin, double xDataMax,const double* FDataPtr)
 {
 	initialize(degreeX,xDataPanels, xDataMin, xDataMax,FDataPtr);
 }
@@ -78,7 +78,7 @@ void initialize()
 	Fvalues.clear();
 }
 
-void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax,double* FDataPtr)
+void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax,const double* FDataPtr)
 {
     if(this->degreeX != degreeX)
     {
@@ -165,13 +165,13 @@ void setLocalData(double x)
    }
 }
 
-    long    degreeX;
-    long    xDataPanels;
-	double  xDataMin;
-	double  xDataMax;
-	double  hData;
+    long           degreeX;
+    long       xDataPanels;
+	double        xDataMin;
+	double        xDataMax;
+	double           hData;
 
-    double* FDataPtr;
+    const double* FDataPtr;
 
 	LegendreApprox1d legendreApprox1d;
 	std::vector<double>   Fvalues;

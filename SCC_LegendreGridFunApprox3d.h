@@ -130,7 +130,7 @@ void initialize()
 void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax,
 			    long degreeY, long yDataPanels, double yDataMin, double yDataMax,
 			    long degreeZ, long zDataPanels, double zDataMin, double zDataMax,
-                double* FDataPtr)
+                const double* FDataPtr)
 {
     long NX = (degreeX+1);
     long NY = (degreeY+1);

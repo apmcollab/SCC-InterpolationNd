@@ -205,6 +205,42 @@ void initialize(const LegendreGridFunApprox3d& Lapprox)
 
 double evaluate(double x,double y,double z)
 {
+//
+// If evaluation point is coincident with a grid point of data being
+// interpolated then skip interpolation and return data value directly
+//
+   long interpIndexX = (long)std::round((x-xDataMin)/hxData);
+   if(interpIndexX < 0)            interpIndexX = 0;
+   if(interpIndexX >= xDataPanels) interpIndexX = xDataPanels-1;
+
+   long interpIndexY = (long)std::round((y-yDataMin)/hyData);
+   if(interpIndexY < 0)            interpIndexY = 0;
+   if(interpIndexY >= yDataPanels) interpIndexY = yDataPanels-1;
+
+   long interpIndexZ = (long)std::round((z-zDataMin)/hzData);
+   if(interpIndexZ < 0)            interpIndexZ = 0;
+   if(interpIndexZ >= zDataPanels) interpIndexZ = zDataPanels-1;
+
+   if( ( std::abs(x - (interpIndexX*hxData + xDataMin)) < (std::abs(x) + 1.0e-06)*1.0e-12 )
+       &&
+       ( std::abs(y - (interpIndexY*hyData + yDataMin)) < (std::abs(y) + 1.0e-06)*1.0e-12 )
+       &&
+       ( std::abs(x - (interpIndexZ*hzData + zDataMin)) < (std::abs(z) + 1.0e-06)*1.0e-12 )
+       )
+   {
+	   if(not fortranFlag)
+	   {
+	       FDataPtr[interpIndexZ + (interpIndexY*(zDataPanels+1))
+	                             + (interpIndexX*(zDataPanels+1)*(yDataPanels+1))];
+	   }
+	   else
+	   {
+		   return
+		   FDataPtr[interpIndexX + (interpIndexY*(xDataPanels+1))
+		                         + (interpIndexZ*(xDataPanels+1)*(yDataPanels+1))];
+	   }
+   }
+
    setLocalData(x,y,z);
    return legendreApprox3d.evaluate(x,interpXmin,interpXmax,
                                     y,interpYmin,interpYmax,

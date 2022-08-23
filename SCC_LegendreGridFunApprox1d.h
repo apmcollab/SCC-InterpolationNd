@@ -111,6 +111,19 @@ void initialize(const LegendreGridFunApprox1d& Lapprox)
 
 double evaluate(double x)
 {
+//
+// If evaluation point is coincident with a grid point of data being
+// interpolated then skip interpolation and return data value directly
+//
+   long interpIndexX = (long)std::round((x-xDataMin)/hData);
+   if(interpIndexX < 0)            interpIndexX = 0;
+   if(interpIndexX >= xDataPanels) interpIndexX = xDataPanels-1;
+
+   if(std::abs(x - (interpIndexX*hData + xDataMin)) < (std::abs(x) + 1.0e-06)*1.0e-12 )
+   {
+	  return FDataPtr[interpIndexX];
+   }
+
    setLocalData(x);
    return legendreApprox1d.evaluate(x,interpXmin,interpXmax,Fvalues);
 }

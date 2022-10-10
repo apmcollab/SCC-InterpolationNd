@@ -230,6 +230,7 @@ double evaluate(double x,double y,double z)
    {
 	   if(not fortranFlag)
 	   {
+	       return
 	       FDataPtr[interpIndexZ + (interpIndexY*(zDataPanels+1))
 	                             + (interpIndexX*(zDataPanels+1)*(yDataPanels+1))];
 	   }

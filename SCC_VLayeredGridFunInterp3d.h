@@ -86,16 +86,16 @@ public:
 		initialize(V);
 	}
 
-	VLayeredGridFunInterp3d(int degreeX,int degreeY, int degreeZ, SCC::VLayeredGridFun3d& dataFun3d)
+	VLayeredGridFunInterp3d(int degreeX,int degreeY, int degreeZ, const SCC::VLayeredGridFun3d& dataFun3d)
 	{
 		initialize(degreeX, degreeY, degreeZ, dataFun3d);
 	}
 
 	void initialize()
 	{
-    layerCount = 0;
+    layerCount  = 0;
+    dataFun3dPtr = nullptr;
 
-    dataFun3d.initialize();
     dataXY.initialize();
 
 	legendreGridFunApprox2d.clear();
@@ -104,9 +104,8 @@ public:
 
 	void initialize(VLayeredGridFunInterp3d& T)
 	{
-		layerCount = T.layerCount;
-
-		dataFun3d.initialize(T.dataFun3d);
+		layerCount   = T.layerCount;
+		dataFun3dPtr = T.dataFun3dPtr;
 
 		dataXY.initialize(T.dataXY);
 
@@ -123,19 +122,19 @@ public:
 
 		// Set pointer to point to *this instance of the data
 
-		legendreGridFunApprox3d[k].FDataPtr = dataFun3d.layer[k].getDataPointer();
+		legendreGridFunApprox3d[k].FDataPtr = dataFun3dPtr->layer[k].getDataPointer();
 		}
 	}
 
-	void initialize(int degreeX,int degreeY, int degreeZ, SCC::VLayeredGridFun3d& dataFun3d)
+	void initialize(int degreeX,int degreeY, int degreeZ, const SCC::VLayeredGridFun3d& dataFun3d)
 	{
 		 if(dataFun3d.getLayerCount() == 0)
 		 {
 			throw std::runtime_error("\n VLayeredGridFunInterp3d: initialize(...) VLayeredGridFun3d argument not initialized.\n");
 		 }
 
-		 this->dataFun3d.initialize(dataFun3d);
-		 this->layerCount = dataFun3d.getLayerCount();
+		 this->dataFun3dPtr = &dataFun3d;
+		 this->layerCount   = dataFun3d.getLayerCount();
 
 		 // For x-y-z interpolation
 
@@ -157,14 +156,14 @@ public:
 		 zPanelArray = dataFun3d.getZpanels();
 		 zBdrys      = dataFun3d.getZbdrys();
 
-         xPanels = dataFun3d.layer[0].getXpanelCount();
-         xMin    = dataFun3d.layer[0].getXmin();
-         xMax    = dataFun3d.layer[0].getXmax();
+         xPanels = dataFun3dPtr->layer[0].getXpanelCount();
+         xMin    = dataFun3dPtr->layer[0].getXmin();
+         xMax    = dataFun3dPtr->layer[0].getXmax();
 
 
-         yPanels = dataFun3d.layer[0].getYpanelCount();
-         yMin    = dataFun3d.layer[0].getYmin();
-         yMax    = dataFun3d.layer[0].getYmax();
+         yPanels = dataFun3dPtr->layer[0].getYpanelCount();
+         yMin    = dataFun3dPtr->layer[0].getYmin();
+         yMax    = dataFun3dPtr->layer[0].getYmax();
 
          dataXY.initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
 
@@ -177,7 +176,7 @@ public:
             legendreGridFunApprox3d[k].initialize(degreeX, xPanels, xMin, xMax,
         		                                  degreeY, yPanels, yMin, yMax,
 												  degreeZ, zPanels, zMin, zMax,
-												  dataFun3d.layer[k].getDataPointer());
+												  dataFun3dPtr->layer[k].getDataPointer());
 
             legendreGridFunApprox2d[k].initialize(degreeX, xPanels, xMin, xMax,
         		                                  degreeY, yPanels, yMin, yMax,
@@ -234,7 +233,7 @@ public:
 		 long outFunLayerCount = outFun.getLayerCount();
 		 long dataLayerIndex;
 
-		 std::vector<double> dataZbdrys = dataFun3d.getZbdrys();
+		 std::vector<double> dataZbdrys = dataFun3dPtr->getZbdrys();
 
 		 bool layerCoincidenceFlag = false;
 
@@ -314,7 +313,7 @@ public:
 		}
 	    // Check for consistency of vertical structure
 
-        SCC::VLayeredGridFun1d dataFunZ = dataFun3d.getConstantXYslice(0, 0);
+        SCC::VLayeredGridFun1d dataFunZ = dataFun3dPtr->getConstantXYslice(0, 0);
         SCC::VLayeredGridFun1d  outFunZ = outFun.getConstantXYslice(0, 0);
 
         if(not outFunZ.isEqualStructure(dataFunZ))
@@ -355,7 +354,7 @@ public:
 			 zPanels      = zPanelArray[k];
 			 for(long r = 0; r <= zPanels; r++)
 			 {
-             dataFun3d.getConstantZslice(k,r,dataXY);
+             dataFun3dPtr->getConstantZslice(k,r,dataXY);
 
 		     legendreGridFunApprox2d[k].FDataPtr = dataXY.getDataPointer();
 
@@ -377,8 +376,8 @@ public:
 
     long layerCount;
 
-    SCC::VLayeredGridFun3d     dataFun3d;
-    SCC::GridFunction2d        dataXY;
+    const SCC::VLayeredGridFun3d*    dataFun3dPtr;
+    SCC::GridFunction2d              dataXY;
 
 	std::vector<LegendreGridFunApprox2d> legendreGridFunApprox2d;
 	std::vector<LegendreGridFunApprox3d> legendreGridFunApprox3d;

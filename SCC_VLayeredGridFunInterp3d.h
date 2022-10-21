@@ -322,6 +322,7 @@ public:
         			                             + " of VLayeredGridFun3d argument not consistent with data\n");
         }
 
+
         SCC::GridFunction2d valuesXY;
 
         long xPanels; double xMin; double xMax;
@@ -372,6 +373,94 @@ public:
 		 }
 
 	}
+
+   //
+	// 3d interpolation of data values to a target function that possesses the same vertical structure
+	// as the source (data) function layers from indexBegin to indexEnd.
+	//
+	// This interpolation just interpolates the 2D slices for each discrete z-coordinate value.
+	//
+	// This form of interpolation will accurately interpolate functions that are just piecewise smooth
+	// over each layer; in particular functions that are discontinuous across layer boundaries.
+	//
+	// The transverse domain size of the target function need not be coincident with the
+	// source (data) function
+	//
+	void interpXY(long indexBegin, long indexEnd, SCC::VLayeredGridFun3d& outFun)
+	{
+	    if(outFun.getLayerCount() == 0)
+		{
+			throw std::runtime_error("\n VgridFunInterp3d : interpXY(...) return argument not initialized.\n");
+		}
+
+	    if(outFun.getLayerCount() != (indexEnd-indexBegin) + 1)
+	    {
+	    	throw std::runtime_error(std::string("\n VLayeredGridFunInterp3d: interpXY(...) vertical structure \n")
+        			                             + " of VLayeredGridFun3d argument not consistent with data\n");
+	    }
+	    // Check for consistency of vertical structure
+
+        SCC::VLayeredGridFun1d dataFunZ = (dataFun3dPtr->getConstantXYslice(0, 0)).extractLayers(indexBegin, indexEnd);
+        SCC::VLayeredGridFun1d  outFunZ = outFun.getConstantXYslice(0, 0);
+
+        if(not outFunZ.isEqualStructure(dataFunZ))
+        {
+        	throw std::runtime_error(std::string("\n VLayeredGridFunInterp3d: interpXY(...) vertical structure \n")
+        			                             + " of VLayeredGridFun3d argument not consistent with data\n");
+        }
+
+
+        SCC::GridFunction2d valuesXY;
+
+        long xPanels; double xMin; double xMax;
+        long yPanels; double yMin; double yMax;
+        long zPanels;
+
+        std::vector<long>   zPanelArray;
+
+		xPanels = outFun.layer[0].getXpanelCount();
+        xMin    = outFun.layer[0].getXmin();
+        xMax    = outFun.layer[0].getXmax();
+
+        yPanels = outFun.layer[0].getYpanelCount();
+        yMin    = outFun.layer[0].getYmin();
+        yMax    = outFun.layer[0].getYmax();
+
+		 zPanelArray = outFun.getZpanels();
+
+		 double hx; double hy;
+
+		 hx = (xMax-xMin)/(double)xPanels;
+		 hy = (yMax-yMin)/(double)yPanels;
+
+		 double xPos; double yPos;
+
+		 valuesXY.initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
+
+		 for(long k = 0; k < outFun.getLayerCount(); k++)
+		 {
+			 zPanels      = zPanelArray[k];
+			 for(long r = 0; r <= zPanels; r++)
+			 {
+             dataFun3dPtr->getConstantZslice(k + indexBegin,r,dataXY);
+
+		     legendreGridFunApprox2d[k + indexBegin].FDataPtr = dataXY.getDataPointer();
+
+		     for(long p = 0; p <= xPanels; p++)
+		     {
+		     xPos = xMin + p*hx;
+		     for(long q = 0; q <= yPanels;  q++)
+		     {
+		     yPos = yMin + q*hy;
+		     valuesXY(p,q) = legendreGridFunApprox2d[k+indexBegin].evaluate(xPos, yPos);
+		     }}
+
+			 outFun.setConstantZslice(k,r,valuesXY);
+			 }
+		 }
+
+	}
+
 
 
     long layerCount;

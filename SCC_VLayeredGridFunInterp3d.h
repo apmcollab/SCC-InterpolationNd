@@ -66,6 +66,13 @@
 #include "SCC_LegendreGridFunApprox3d.h"
 
 
+#ifdef _OPENMP
+#include <omp.h>
+#ifdef OPENBLAS_THREADED
+#include <cblas.h>
+#endif
+#endif
+
 #ifndef VLAYERED_GRID_FUN_INTERP_3D_
 #define VLAYERED_GRID_FUN_INTERP_3D_
 
@@ -100,6 +107,12 @@ public:
 
 	legendreGridFunApprox2d.clear();
 	legendreGridFunApprox3d.clear();
+
+	#ifdef _OPENMP
+	legendreGridFunApprox2dMT.clear();
+	dataXYMT.clear();
+    dataFun3dPtrMT.clear();
+	#endif
 	}
 
 	void initialize(VLayeredGridFunInterp3d& T)
@@ -124,6 +137,20 @@ public:
 
 		legendreGridFunApprox3d[k].FDataPtr = dataFun3dPtr->layer[k].getDataPointer();
 		}
+
+	    #ifdef _OPENMP
+	    int threadCount =  omp_get_max_threads();
+	    legendreGridFunApprox2dMT.resize(threadCount);
+	    dataXYMT.resize(threadCount);
+	    dataFun3dPtrMT.resize(threadCount);
+
+	    for(long k = 0; k < threadCount; k++)
+	    {
+	    	dataXYMT[k].initialize(T.dataXYMT[k]);
+	    	legendreGridFunApprox2dMT[k].initialize(T.legendreGridFunApprox2dMT[k]);
+	    	dataFun3dPtrMT[k]  = T.dataFun3dPtrMT[k];
+	    }
+		#endif
 	}
 
 	void initialize(int degreeX,int degreeY, int degreeZ, const SCC::VLayeredGridFun3d& dataFun3d)
@@ -182,6 +209,27 @@ public:
         		                                  degreeY, yPanels, yMin, yMax,
 												  nullptr);
 		 }
+
+		#ifdef _OPENMP
+	    int threadCount =  omp_get_max_threads();
+	    legendreGridFunApprox2dMT.clear();
+	    dataXYMT.clear();
+        dataFun3dPtrMT.clear();
+
+	    legendreGridFunApprox2dMT.resize(threadCount);
+	    dataXYMT.resize(threadCount);
+	    dataFun3dPtrMT.resize(threadCount);
+
+	    for(long k = 0; k < threadCount; k++)
+	    {
+	    	dataXYMT[k].initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
+	    	legendreGridFunApprox2dMT[k].initialize(degreeX, xPanels, xMin, xMax,
+        		                                    degreeY, yPanels, yMin, yMax,
+												    nullptr);
+	    	dataFun3dPtrMT[k]  = nullptr;
+	    }
+		#endif
+
 	}
 
     //
@@ -348,8 +396,9 @@ public:
 
 		 double xPos; double yPos;
 
-		 valuesXY.initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
+		 #ifndef _OPENMP
 
+		 valuesXY.initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
 		 for(long k = 0; k < layerCount; k++)
 		 {
 			 zPanels      = zPanelArray[k];
@@ -372,6 +421,45 @@ public:
 			 }
 		 }
 
+       #else
+
+	   #ifdef OPENBLAS_THREADED
+	   int openblas_max_threads = openblas_get_num_threads();
+	   openblas_set_num_threads(1);
+	   #endif
+
+       int tI;
+
+	   for(long k = 0; k < layerCount; k++)
+	   {
+			 zPanels      = zPanelArray[k];
+			 #pragma omp parallel for private(tI,xPos,yPos) schedule(static,1)
+			 for(long r = 0; r <= zPanels; r++)
+			 {
+		     tI = omp_get_thread_num();
+
+		     for(long p = 0; p <= dataFun3dPtr->layer[k].xPanels; p++)
+             {
+             for(long q = 0; q <= dataFun3dPtr->layer[k].yPanels; q++)
+             {
+            	 dataXYMT[tI](p,q) = dataFun3dPtr->layer[k](p,q,r);
+             }}
+
+		     legendreGridFunApprox2dMT[tI].FDataPtr = dataXYMT[tI].getDataPointer();
+
+		     for(long p = 0; p <= xPanels; p++)
+		     {
+		     xPos = xMin + p*hx;
+		     for(long q = 0; q <= yPanels;  q++)
+		     {
+		     yPos = yMin + q*hy;
+		     outFun.layer[k](p,q,r) = legendreGridFunApprox2dMT[tI].evaluate(xPos, yPos);
+		     }}
+			 }
+		 }
+
+
+       #endif
 	}
 
    //
@@ -437,12 +525,15 @@ public:
 
 		 valuesXY.initialize(xPanels,xMin,xMax,yPanels,yMin,yMax);
 
+		#ifndef _OPENMP
+
 		 for(long k = 0; k < outFun.getLayerCount(); k++)
 		 {
 			 zPanels      = zPanelArray[k];
 			 for(long r = 0; r <= zPanels; r++)
 			 {
-             dataFun3dPtr->getConstantZslice(k + indexBegin,r,dataXY);
+
+		     dataFun3dPtr->getConstantZslice(k + indexBegin,r,dataXY);
 
 		     legendreGridFunApprox2d[k + indexBegin].FDataPtr = dataXY.getDataPointer();
 
@@ -458,10 +549,49 @@ public:
 			 outFun.setConstantZslice(k,r,valuesXY);
 			 }
 		 }
+		#else
+	   	#ifdef OPENBLAS_THREADED
+		int openblas_max_threads = openblas_get_num_threads();
+		openblas_set_num_threads(1);
+	   	#endif
+
+		int tI;
+
+		for(long k = 0; k < outFun.getLayerCount(); k++)
+		{
+			 zPanels      = zPanelArray[k];
+			 #pragma omp parallel for private(tI,xPos,yPos) schedule(static,1)
+			 for(long r = 0; r <= zPanels; r++)
+			 {
+		     tI = omp_get_thread_num();
+
+		     for(long p = 0; p <= dataFun3dPtr->layer[k + indexBegin].xPanels; p++)
+             {
+             for(long q = 0; q <= dataFun3dPtr->layer[k + indexBegin].yPanels; q++)
+             {
+            	 dataXYMT[tI](p,q) = dataFun3dPtr->layer[k + indexBegin](p,q,r);
+             }}
+
+
+		     legendreGridFunApprox2dMT[tI].FDataPtr = dataXYMT[tI].getDataPointer();
+
+		     for(long p = 0; p <= xPanels; p++)
+		     {
+		     xPos = xMin + p*hx;
+		     for(long q = 0; q <= yPanels;  q++)
+		     {
+		     yPos = yMin + q*hy;
+		     outFun.layer[k](p,q,r) = legendreGridFunApprox2dMT[tI].evaluate(xPos, yPos);
+		     }}
+			 }
+		 }
+
+
+		#endif
+
+
 
 	}
-
-
 
     long layerCount;
 
@@ -470,6 +600,13 @@ public:
 
 	std::vector<LegendreGridFunApprox2d> legendreGridFunApprox2d;
 	std::vector<LegendreGridFunApprox3d> legendreGridFunApprox3d;
+
+
+	#ifdef _OPENMP
+	std::vector<LegendreGridFunApprox2d> legendreGridFunApprox2dMT;
+	std::vector<SCC::GridFunction2d>                      dataXYMT;
+	std::vector<const SCC::VLayeredGridFun3d*>      dataFun3dPtrMT;
+	#endif
 };
 
 } // SCC namespace

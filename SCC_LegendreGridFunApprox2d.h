@@ -51,6 +51,9 @@
 //
 // The requested interpolation degree must be > 0.
 //
+// If the number of grid panels is less than the specified interpolation degree
+// in any coordinate direction then the interpolation degree in that coordinate
+// direction is reduced.
 //
 
 namespace SCC
@@ -124,6 +127,9 @@ void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax
 			    long degreeY, long yDataPanels, double yDataMin, double yDataMax,
                 const double* FDataPtr)
 {
+	if(xDataPanels < degreeX){degreeX = xDataPanels;}
+	if(yDataPanels < degreeY){degreeY = yDataPanels;}
+
     long NX = (degreeX+1);
     long NY = (degreeY+1);
 

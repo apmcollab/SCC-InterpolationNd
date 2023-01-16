@@ -51,6 +51,10 @@
 //
 // The requested interpolation degree must be > 0.
 //
+// If the number of grid panels is less than the specified interpolation degree
+// then the interpolation degree is reduced.
+//
+//
 //
 namespace SCC
 {
@@ -100,6 +104,8 @@ void initialize()
 
 void initialize(long degreeX, long xDataPanels, double xDataMin, double xDataMax,const double* FDataPtr)
 {
+	if(xDataPanels < degreeX) {degreeX = xDataPanels;}
+
     if(this->degreeX != degreeX)
     {
     this->Fvalues.resize(degreeX+1);
@@ -175,6 +181,7 @@ void setLocalData(double x)
 
    interpIndexStart = interpIndexBase;
    interpIndexEnd   = interpIndexBase + 1;
+
 
    while(interpIndexEnd - interpIndexStart < degreeX)
    {

@@ -142,8 +142,8 @@ double evaluate(double x)
 // interpolated then skip interpolation and return data value directly
 //
    long interpIndexX = (long)std::round((x-xDataMin)/hData);
-   if(interpIndexX < 0)            interpIndexX = 0;
-   if(interpIndexX >= xDataPanels) interpIndexX = xDataPanels-1;
+   if(interpIndexX < 0)            {interpIndexX = 0;}
+   if(interpIndexX >= xDataPanels) {interpIndexX = xDataPanels-1;}
 
    if(std::abs(x - (interpIndexX*hData + xDataMin)) < (std::abs(x) + 1.0e-06)*1.0e-12 )
    {
@@ -175,8 +175,8 @@ void setLocalData(double x)
    long      interpIndexEnd;
 
    interpIndexBase = (long)(floor((x-xDataMin)/hData));
-   if(interpIndexBase < 0)            interpIndexBase = 0;
-   if(interpIndexBase >= xDataPanels) interpIndexBase = xDataPanels-1;
+   if(interpIndexBase < 0)            {interpIndexBase = 0;}
+   if(interpIndexBase >= xDataPanels) {interpIndexBase = xDataPanels-1;}
 
 
    interpIndexStart = interpIndexBase;
@@ -185,8 +185,8 @@ void setLocalData(double x)
 
    while(interpIndexEnd - interpIndexStart < degreeX)
    {
-		   if(interpIndexStart > 0          ) interpIndexStart -= 1;
-		   if(interpIndexEnd   < xDataPanels) interpIndexEnd   += 1;
+		   if(interpIndexStart > 0          ) {interpIndexStart -= 1;}
+		   if(interpIndexEnd   < xDataPanels) {interpIndexEnd   += 1;}
    }
 
 

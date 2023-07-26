@@ -217,16 +217,16 @@ double evaluate(double x,double y,double z)
 // interpolated then skip interpolation and return data value directly
 //
    long interpIndexX = (long)std::round((x-xDataMin)/hxData);
-   if(interpIndexX < 0)            interpIndexX = 0;
-   if(interpIndexX >= xDataPanels) interpIndexX = xDataPanels-1;
+   if(interpIndexX < 0)            {interpIndexX = 0;}
+   if(interpIndexX >= xDataPanels) {interpIndexX = xDataPanels-1;}
 
    long interpIndexY = (long)std::round((y-yDataMin)/hyData);
-   if(interpIndexY < 0)            interpIndexY = 0;
-   if(interpIndexY >= yDataPanels) interpIndexY = yDataPanels-1;
+   if(interpIndexY < 0)            {interpIndexY = 0;}
+   if(interpIndexY >= yDataPanels) {interpIndexY = yDataPanels-1;}
 
    long interpIndexZ = (long)std::round((z-zDataMin)/hzData);
-   if(interpIndexZ < 0)            interpIndexZ = 0;
-   if(interpIndexZ >= zDataPanels) interpIndexZ = zDataPanels-1;
+   if(interpIndexZ < 0)            {interpIndexZ = 0;}
+   if(interpIndexZ >= zDataPanels) {interpIndexZ = zDataPanels-1;}
 
    if( ( std::abs(x - (interpIndexX*hxData + xDataMin)) < (std::abs(x) + 1.0e-06)*1.0e-12 )
        &&
@@ -291,8 +291,8 @@ void setLocalData(double x,double y,double z)
    // X-coordinate
 
    interpIndexBaseX = floor((x-xDataMin)/hxData);
-   if(interpIndexBaseX < 0)            interpIndexBaseX = 0;
-   if(interpIndexBaseX >= xDataPanels) interpIndexBaseX = xDataPanels-1;
+   if(interpIndexBaseX < 0)            {interpIndexBaseX = 0;}
+   if(interpIndexBaseX >= xDataPanels) {interpIndexBaseX = xDataPanels-1;}
 
    interpIndexStartX = interpIndexBaseX;
    interpIndexEndX   = interpIndexBaseX;
@@ -303,8 +303,8 @@ void setLocalData(double x,double y,double z)
 
    while(interpIndexEndX - interpIndexStartX < degreeX)
    {
-		   if(interpIndexStartX > 0          ) interpIndexStartX -= 1;
-		   if(interpIndexEndX   < xDataPanels) interpIndexEndX   += 1;
+		   if(interpIndexStartX > 0          ) {interpIndexStartX -= 1;}
+		   if(interpIndexEndX   < xDataPanels) {interpIndexEndX   += 1;}
    }
 
    if( (interpIndexEndX - interpIndexStartX) ==  degreeX+1 )
@@ -319,16 +319,16 @@ void setLocalData(double x,double y,double z)
    // Y-coordinate
 
    interpIndexBaseY = floor((y-yDataMin)/hyData);
-   if(interpIndexBaseY < 0)            interpIndexBaseY = 0;
-   if(interpIndexBaseY >= yDataPanels) interpIndexBaseY = yDataPanels-1;
+   if(interpIndexBaseY < 0)            {interpIndexBaseY = 0;}
+   if(interpIndexBaseY >= yDataPanels) {interpIndexBaseY = yDataPanels-1;}
 
    interpIndexStartY = interpIndexBaseY;
    interpIndexEndY   = interpIndexBaseY + 1;
 
    while(interpIndexEndY - interpIndexStartY < degreeY)
    {
-		   if(interpIndexStartY > 0          ) interpIndexStartY -= 1;
-		   if(interpIndexEndY   < yDataPanels) interpIndexEndY   += 1;
+		   if(interpIndexStartY > 0          ) {interpIndexStartY -= 1;}
+		   if(interpIndexEndY   < yDataPanels) {interpIndexEndY   += 1;}
    }
 
    if( (interpIndexEndY- interpIndexStartY) ==  degreeY+1 )
@@ -343,16 +343,16 @@ void setLocalData(double x,double y,double z)
    // Z-coordinate
 
    interpIndexBaseZ = floor((z-zDataMin)/hzData);
-   if(interpIndexBaseZ < 0)            interpIndexBaseZ = 0;
-   if(interpIndexBaseZ >= zDataPanels) interpIndexBaseZ = zDataPanels-1;
+   if(interpIndexBaseZ < 0)            {interpIndexBaseZ = 0;}
+   if(interpIndexBaseZ >= zDataPanels) {interpIndexBaseZ = zDataPanels-1;}
 
    interpIndexStartZ = interpIndexBaseZ;
    interpIndexEndZ   = interpIndexBaseZ + 1;
 
    while(interpIndexEndZ - interpIndexStartZ < degreeZ)
    {
-		   if(interpIndexStartZ > 0          ) interpIndexStartZ -= 1;
-		   if(interpIndexEndZ   < zDataPanels) interpIndexEndZ   += 1;
+		   if(interpIndexStartZ > 0          ) {interpIndexStartZ -= 1;}
+		   if(interpIndexEndZ   < zDataPanels) {interpIndexEndZ   += 1;}
    }
 
    if( (interpIndexEndZ- interpIndexStartZ) ==  degreeZ+1 )

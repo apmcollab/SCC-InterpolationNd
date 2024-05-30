@@ -268,6 +268,89 @@ public:
 			 }
 	}
 
+	SCC::GridFunction2d getConstantXslice(double xPos)
+	{
+	double yMin  = legendreGridFunApprox3d.yDataMin;
+	double yMax  = legendreGridFunApprox3d.yDataMax;
+	double hy    = legendreGridFunApprox3d.hyData;
+	long yPanels = legendreGridFunApprox3d.yDataPanels;
+
+    double zMin  = legendreGridFunApprox3d.zDataMin;
+	double zMax  = legendreGridFunApprox3d.zDataMax;
+	double hz    = legendreGridFunApprox3d.hzData;
+	long zPanels = legendreGridFunApprox3d.zDataPanels;
+
+    SCC::GridFunction2d R(yPanels,yMin,yMax,zPanels,zMin,zMax);
+
+	double yPos; double zPos;
+
+    for(long j = 0; j <= yPanels; j++)
+    {
+    yPos = yMin + j*hy;
+    for(long k = 0; k <= zPanels; k++)
+    {
+    zPos = zMin + k*hz;
+    R.Values(j,k) = legendreGridFunApprox3d.evaluate(xPos,yPos,zPos);
+    }}
+    return R;
+	}
+
+	SCC::GridFunction2d getConstantYslice(double yPos)
+	{
+	double xMin  = legendreGridFunApprox3d.xDataMin;
+	double xMax  = legendreGridFunApprox3d.xDataMax;
+	double hx    = legendreGridFunApprox3d.hxData;
+	long xPanels = legendreGridFunApprox3d.xDataPanels;
+
+    double zMin  = legendreGridFunApprox3d.zDataMin;
+	double zMax  = legendreGridFunApprox3d.zDataMax;
+	double hz    = legendreGridFunApprox3d.hzData;
+	long zPanels = legendreGridFunApprox3d.zDataPanels;
+
+    SCC::GridFunction2d R(xPanels,xMin,xMax,zPanels,zMin,zMax);
+
+	double xPos; double zPos;
+
+    for(long i = 0; i <= xPanels; i++)
+    {
+    xPos = xMin + i*hx;
+    for(long k = 0; k <= zPanels; k++)
+    {
+    zPos = zMin + k*hz;
+    R.Values(i,k) = legendreGridFunApprox3d.evaluate(xPos,yPos,zPos);
+    }}
+    return R;
+	}
+
+
+	SCC::GridFunction2d getConstantZslice(double zPos)
+	{
+	double xMin  = legendreGridFunApprox3d.xDataMin;
+	double xMax  = legendreGridFunApprox3d.xDataMax;
+	double hx    = legendreGridFunApprox3d.hxData;
+	long xPanels = legendreGridFunApprox3d.xDataPanels;
+
+    double yMin  = legendreGridFunApprox3d.yDataMin;
+	double yMax  = legendreGridFunApprox3d.yDataMax;
+	double hy    = legendreGridFunApprox3d.hyData;
+	long yPanels = legendreGridFunApprox3d.yDataPanels;
+
+    SCC::GridFunction2d R(xPanels,xMin,xMax,yPanels,yMin,yMax);
+
+	double xPos; double yPos;
+
+    for(long i = 0; i <= xPanels; i++)
+    {
+    xPos = xMin + i*hx;
+    for(long j = 0; j <= yPanels; j++)
+    {
+    yPos = yMin + j*hy;
+    R.Values(i,j) = legendreGridFunApprox3d.evaluate(xPos,yPos,zPos);
+    }}
+    return R;
+	}
+
+
 	SCC::GridFunction3d   dataFun3d;
     SCC::GridFunction2d   dataXY;
 

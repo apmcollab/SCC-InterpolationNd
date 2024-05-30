@@ -110,8 +110,8 @@ double evaluateInterpolant(double xPos, double yPos, double zPos, const SCC::Gri
 }
 
 
-void createNodesAndWeightsData(double xPos, double yPos, double zPos, array<long,3>& coordPanels,
-array<double,3>& coordMin, array<double, 3>& coordMax)
+void createNodesAndWeightsData(double xPos, double yPos, double zPos, std::array<long,3>& coordPanels,
+std::array<double,3>& coordMin,std::array<double, 3>& coordMax)
 {
 	// Determine the range of grid indices associated with the interpolant, a range
 	// determined so that the interpolated value is centered as much as possible
@@ -126,7 +126,7 @@ array<double,3>& coordMin, array<double, 3>& coordMax)
     double hy = (coordMax[1] - coordMin[1])/yPanel;
     double hz = (coordMax[2] - coordMin[2])/zPanel;
 
-    string errMessage;
+    std::string errMessage;
 
     if((legendreInd_X > xPanel)
      ||(legendreInd_Y > yPanel)
@@ -217,7 +217,7 @@ void createNodesAndWeightsData(double xPos, double yPos, double zPos, const SCC:
     long yPanel = f.getYpanelCount();
     long zPanel = f.getZpanelCount();
 
-    string errMessage;
+    std::string errMessage;
 
     if((legendreInd_X > xPanel)
      ||(legendreInd_Y > yPanel)
@@ -322,8 +322,8 @@ double pMin, double pPos, long& minIndex, long& maxIndex)
 }
 
 void captureNodesAndWeights (double xPos, double yPos, double zPos,
-      array<long,3>& coordPanels, array<double,3>& coordMin, array<double, 3>& coordMax,
-      array<long,3>& minIndex, array<long, 3>& maxIndex,  std::vector<double>& weightVector)
+      std::array<long,3>& coordPanels, std::array<double,3>& coordMin, std::array<double, 3>& coordMax,
+      std::array<long,3>& minIndex,    std::array<long, 3>& maxIndex,  std::vector<double>& weightVector)
 {
 	  createNodesAndWeightsData(xPos, yPos, zPos, coordPanels,coordMin,coordMax);
 

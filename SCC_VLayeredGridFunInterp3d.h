@@ -588,10 +588,102 @@ public:
 
 
 		#endif
-
-
-
 	}
+
+
+	//
+    // Evaluate the interpolant of the vertically layered grid at the points of a single layer
+    // grid (and SCC::GridFunction3d instance). This interpolation respects layer boundaries
+    // so discontinuous potentials can be interpolated. If a z-coordinate evaluation occurs on a
+    // layer boundary, the average of the interpolant on either side of the layer is used.
+    //
+	void interpXYZ(SCC::GridFunction3d& outFun)
+	{
+		 if(outFun.isNull())
+		 {
+			throw std::runtime_error("\n VLayeredGridFunInterp3d: interpXYZ(SCC::GridFunction3d& outFun) return argument not initialized.\n");
+		 }
+
+		 long xPanels; double xMin; double xMax;
+		 long yPanels; double yMin; double yMax;
+		 long zPanels; double zMin; double zMax;
+
+		 xPanels = outFun.getXpanelCount();
+         xMin    = outFun.getXmin();
+         xMax    = outFun.getXmax();
+
+         yPanels = outFun.getYpanelCount();
+         yMin    = outFun.getYmin();
+         yMax    = outFun.getYmax();
+
+         zPanels = outFun.getZpanelCount();
+         zMin    = outFun.getZmin();
+         zMax    = outFun.getZmax();
+
+		 double hx; double hy; double hz;
+
+		 hx = (xMax-xMin)/(double)xPanels;
+		 hy = (yMax-yMin)/(double)yPanels;
+		 hz = (zMax-zMin)/(double)zPanels;
+
+		 double xPos; double yPos; double zPos;
+
+		 std::vector<double> dataZbdrys = dataFun3dPtr->getZbdrys();
+
+		 long layerCount = dataZbdrys.size() - 1;
+
+		 bool layerCoincidenceFlag = false;
+
+		 long dataLayerIndex;
+		 bool avgFlag;
+
+		 for(long r = 0; r  <= zPanels; r++)
+		 {
+			 zPos    = zMin + r*hz;
+			 avgFlag = false;
+
+		     if     (zPos <= dataZbdrys[0])           { dataLayerIndex = 0;}
+		     else if(zPos >= dataZbdrys[layerCount])  { dataLayerIndex = layerCount-1;}
+             else
+             {
+		     for(long i = 0; i < layerCount; i++)
+		     {
+		         if(zPos == dataZbdrys[i+1])
+		         {
+		         dataLayerIndex = i;
+		         avgFlag        = true;
+		         break;
+		         }
+		    	 else if((zPos >= dataZbdrys[i])&&(zPos < dataZbdrys[i+1]))
+		    	 {
+		    	 dataLayerIndex = i;
+		    	 break;
+		    	 }
+		     }}
+
+		     for(long p = 0; p <= xPanels; p++)
+		     {
+		     xPos = xMin + p*hx;
+
+		     for(long q = 0; q <= yPanels;  q++)
+		     {
+		     yPos = yMin + q*hy;
+
+             if(not avgFlag)
+             {
+		     outFun(p,q,r) = legendreGridFunApprox3d[dataLayerIndex].evaluate(xPos, yPos, zPos);
+		     }
+		     else
+		     {
+		     outFun(p,q,r)
+		     = (legendreGridFunApprox3d[dataLayerIndex].evaluate(xPos, yPos, zPos) + legendreGridFunApprox3d[dataLayerIndex+1].evaluate(xPos, yPos, zPos))/2.0;
+		     }
+
+		     }
+
+	        }}
+    }
+
 
     long layerCount;
 

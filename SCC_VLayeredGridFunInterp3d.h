@@ -632,8 +632,6 @@ public:
 
 		 long layerCount = dataZbdrys.size() - 1;
 
-		 bool layerCoincidenceFlag = false;
-
 		 long dataLayerIndex;
 		 bool avgFlag;
 

@@ -640,7 +640,7 @@ public:
 			 zPos    = zMin + r*hz;
 			 avgFlag = false;
 
-		     if     (zPos <= dataZbdrys[0])           { dataLayerIndex = 0;}
+		     if     (zPos <= dataZbdrys[0]){ dataLayerIndex = 0;}
 		     else if(zPos >= dataZbdrys[layerCount])  { dataLayerIndex = layerCount-1;}
              else
              {
